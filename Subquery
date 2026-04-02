@@ -1,0 +1,143 @@
+✅  Subquery
+
+A subquery is a query written inside another SQL query.
+
+🔹 It is enclosed in parentheses ( ) and executed first.
+🔹Its result is used by the outer (main) query.
+
+✅ In simple words:
+  “A query inside another query.”
+
+
+
+✅ Basic Syntax
+
+SELECT column_name
+FROM table_name
+WHERE column_name OPERATOR (
+    SELECT column_name
+    FROM table_name
+    WHERE condition
+);
+
+👉 OPERATOR can be: `=`, `IN`, `>`, `<`, `ANY`, `ALL`, etc.
+
+
+✅ Types of Subqueries
+
+✅ 1. Single-row Subquery
+
+🔹 Returns only one value
+🔹 Uses operators like `=`, `>`, `<`
+
+✅ Example:
+👉 Finds employees earning more than average salary.
+
+SELECT name
+FROM employees
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM employees
+);
+
+
+✅ 2. Multiple-row Subquery
+
+🔹Returns multiple values
+🔹Uses `IN`, `ANY`, `ALL`
+
+✅ Example:
+👉 Finds employees working in Mumbai departments.
+
+SELECT name
+FROM employees
+WHERE department_id IN (
+    SELECT department_id
+    FROM departments
+    WHERE location = 'Mumbai'
+);
+
+
+✅ 3. Correlated Subquery
+
+🔹 Depends on outer query
+🔹 Executes once for each row
+
+✅ Example:
+👉 Compares salary with department-wise average.
+
+SELECT e1.name, e1.salary
+FROM employees e1
+WHERE salary > (
+    SELECT AVG(e2.salary)
+    FROM employees e2
+    WHERE e1.department_id = e2.department_id
+);
+
+
+✅ 4. Nested Subquery
+
+ A subquery inside another subquery
+
+✅ Example:
+
+SELECT name
+FROM employees
+WHERE department_id = (
+    SELECT department_id
+    FROM departments
+    WHERE location = (
+        SELECT location
+        FROM locations
+        WHERE city = 'Mumbai'
+    )
+);
+
+
+✅ Ways of Execution
+
+1. Non-Correlated Subquery
+
+🔹 Executes only once
+🔹 Result is passed to main query
+
+👉 Flow:
+
+1. Subquery runs first
+2. Result stored
+3. Outer query runs using that result
+
+
+🔸 2. Correlated Subquery
+
+🔹 Executes multiple times (for each row)
+
+👉 Flow:
+
+1. Outer query picks a row
+2. Subquery runs for that row
+3. Condition is checked
+4. Repeats for all rows
+
+🔹 Subquery Usage Locations
+
+ ✅ In WHERE clause (most common)
+
+SELECT name
+FROM employees
+WHERE salary > (SELECT AVG(salary) FROM employees);
+
+✅ In SELECT clause
+
+SELECT name,
+       (SELECT MAX(salary) FROM employees) AS max_salary
+FROM employees;
+
+✅ In FROM clause (Inline View)
+
+SELECT dept_id, avg_salary
+FROM (
+    SELECT department_id AS dept_id, AVG(salary) AS avg_salary
+    FROM employees
+    GROUP BY department_id
+);
