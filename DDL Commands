@@ -1,0 +1,94 @@
+✅ DDL (Data Definition Language)
+DDL (Data Definition Language) in SQL is used to define and manage the structure of a database. 
+It deals with creating, altering, and deleting database objects like tables, schemas, indexes, etc.
+
+✅1. CREATE
+--> Create database or its objects (table, index, function, views, store procedure and triggers)
+SYNTAX
+        CREATE TABLE table_name (
+            column1 datatype constraints,
+            column2 datatype constraints,
+                    ...
+            columnn datatype constraints
+        );
+EXAMPLE
+      CREATE TABLE students (
+          id INT PRIMARY KEY,
+          name VARCHAR(50) Not Null,
+      		Gender Varchar(10) Not Null,
+          Phone number(10) Not NULL Check(length(phone) == 10),
+      		Email Varchar(20) Unique Not NULL
+      );
+
+✅2. RENAME
+--> RENAME is a SQL command used to change the name of a table or database object without changing its data.
+
+SYNTAX
+    RENAME old_table_name TO new_table_name;
+
+✅3. ALTER
+--> It is used to add, delete, or change columns in a table.
+
+SYNTAX
+Add Column
+    ALTER TABLE table_name
+    ADD column_name datatype;
+
+Modify Column
+    ALTER TABLE table_name
+    MODIFY column_name datatype;
+
+Drop Column
+    ALTER TABLE table_name
+    DROP COLUMN column_name;
+
+Rename Column
+    ALTER TABLE table_name
+    RENAME COLUMN old_name TO new_name;
+
+Rename Table
+    ALTER TABLE old_table_name
+    RENAME TO new_table_name;
+
+✅4. DROP
+--> DROP is used to delete a table or database object permanently.
+
+SYNTAX
+    DROP TABLE table_name;
+
+✅5. TRUNCATE
+--> TRUNCATE is used to delete all records from a table quickly without removing its structure.
+
+SYNTAX
+    TRUNCATE TABLE table_name;
+
+🔥 Important Theory Questions
+1. Define DDL with examples
+2. Difference between DDL and DML
+3. What is PRIMARY KEY?
+4. What is FOREIGN KEY?
+5. Difference between PRIMARY KEY and FOREIGN KEY
+6. Define CREATE, ALTER, DROP, TRUNCATE, RENAME
+7. Difference between DROP and TRUNCATE
+8. What is NOT NULL constraint?
+9. What is UNIQUE constraint?
+10. What is DEFAULT constraint?
+
+👇 Here are important SQL questions (only questions) 
+
+1. Create a table named student with id, name, and age
+2. Add a new column email to student table
+3. Modify the datatype of name column
+4. Drop the age column from student table
+5. Rename the table student to students
+6. Delete all records from students table
+7. Delete the students table permanently
+8. Create a table dept with dept_id as primary key
+9. Create a table emp with foreign key dept_id referencing dept table
+10. Add a foreign key to an existing table
+
+
+
+
+
+
