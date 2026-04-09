@@ -1,0 +1,108 @@
+✅ DML Statements in SQL
+
+✅ Definition:
+    DML (Data Manipulation Language) is used to modify data stored in database tables.
+
+👉 It deals with:
+
+    1. Inserting data
+    2. Updating data
+    3. Deleting data
+    4. Retrieving data
+
+
+✅ Main DML Commands:
+1. INSERT
+   Used to add new records into a table.
+Syntax:
+    INSERT INTO table_name (column1, column2)
+    VALUES (value1, value2);
+OR
+    INSERT INTO table_name
+    VALUES (value1, value2, value3); 
+
+Example:
+    INSERT INTO Students (ID, Name, Age)
+    VALUES (1, 'Rahul', 20);
+
+2. UPDATE
+   Used to modify existing records.
+Syntax:
+    UPDATE table_name
+    SET column1 = value1
+    WHERE condition;
+Example:
+    UPDATE Students
+    SET Age = 21
+    WHERE ID = 1;
+⚠️ Without WHERE, all rows will be updated!
+
+3. DELETE
+  Used to remove records from a table.
+Syntax:
+  DELETE FROM table_name
+  WHERE condition;
+Example:
+  DELETE FROM Students
+  WHERE ID = 1;
+⚠️ Without WHERE, all records will be deleted!
+
+4. SELECT
+
+  Used to retrieve data from the database.
+Syntax:
+  SELECT column1, column2
+  FROM table_name;
+Example:
+SELECT * FROM Students;
+
+Important Points:
+  DML operations affect data only, not structure.
+  Changes can be controlled using:
+
+  * COMMIT (save changes)
+  * ROLLBACK (undo changes)
+  * WHERE clause is important to avoid unwanted changes.
+
+✅ Important Questions – DML in SQL
+----------------------------------------------------------------------------------------------------------------------------------------
+* Define DML.
+* What is the use of INSERT statement?
+* What does SELECT * mean?
+* Which command is used to delete data?
+* What is the purpose of WHERE clause?
+* Difference between DELETE and TRUNCATE (basic idea).
+* List all DML commands.
+* Write syntax of INSERT.
+* What is UPDATE statement? Give example.
+* What is DELETE statement?
+* Explain SELECT with example.
+* What happens if WHERE clause is not used?
+* Explain all DML commands with examples.
+* Write different forms of INSERT statement.
+* Explain UPDATE with WHERE clause.
+* Describe DELETE statement with example.
+* Difference between INSERT and UPDATE.
+* Explain SELECT statement with conditions.
+
+✅ Important SQL Practice Questions
+----------------------------------------------------------------------------------------------------------------------------------------
+1. Insert a record into Students table.
+2. Update age of a student whose ID = 2.
+3. Delete a student whose name = 'Ravi'.
+4. Display all records from Students table.
+5. Insert multiple records into Students.
+6. Update multiple columns using UPDATE.
+7. Delete all records from a table.
+8. Select students whose age > 20.
+9. Insert data into one table using another table.
+10. Update data using conditions (e.g., increase age by 1).
+11. Delete records using multiple conditions.
+12. Select specific columns with WHERE clause.
+
+✅ Very Important (Frequently Asked)
+----------------------------------------------------------------------------------------------------------------------------------------
+* Write all DML commands with syntax and examples ⭐
+* Difference between DELETE, TRUNCATE, and DROP ⭐
+* Explain INSERT in different ways ⭐
+* Write SQL queries for given conditions ⭐
