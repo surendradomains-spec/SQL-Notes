@@ -1,0 +1,172 @@
+✅ SQL Data Types
+     A data type defines the kind of data a column can store.
+     It controls input, storage, and operations on data.
+
+✅ Purpose
+    -> Ensure correct data entry
+    -> Improve performance
+    -> Save memory/storage
+    -> Maintain data consistency
+
+✅ Types of Data Types
+ 1. Numeric Data Types
+       Used to store numbers
+Types:
+      -> INT → whole numbers
+      -> BIGINT → large integers
+      -> DECIMAL(p,s) → exact decimal (money)
+      -> FLOAT → approximate values
+
+2. String (Character) Data Types
+       Used to store text
+Types:
+      -> CHAR(n) → fixed length
+      -> VARCHAR(n) → variable length
+      -> TEXT → large text
+
+3. Date & Time Data Types
+       Used for date and time values
+Types:
+      -> DATE → date only
+      -> TIME → time only
+      -> DATETIME / TIMESTAMP → date + time
+
+4. Boolean Data Type
+      Stores TRUE or FALSE
+Type:
+      -> BOOLEAN
+
+5. Binary Data Types
+       Used to store files (images, videos)
+Types:
+
+-> BLOB
+-> VARBINARY
+
+✅ CHAR vs VARCHAR
+
+| Feature | CHAR         | VARCHAR         |
+| ------- | ------------ | --------------- |
+| Length  | Fixed        | Variable        |
+| Speed   | Faster       | Slightly slower |
+| Storage | Wastes space | Saves space     |
+
+✅ Data Type Comparison
+
+1. Numeric Types
+
+| Feature        | MySQL             | PostgreSQL                 | SQL Server      |
+| -------------- | ----------------- | -------------------------- | --------------- |
+| Integer        | INT, BIGINT       | INTEGER, BIGINT            | INT, BIGINT     |
+| Auto Increment | AUTO_INCREMENT    | SERIAL / BIGSERIAL         | IDENTITY        |
+| Exact Decimal  | DECIMAL(p,s)      | NUMERIC(p,s)               | DECIMAL(p,s)    |
+| Float          | FLOAT, DOUBLE     | REAL, DOUBLE PRECISION     | FLOAT, REAL     |
+
+ 2. String Types
+
+| Feature    | MySQL                      | PostgreSQL     | SQL Server                               |
+| ---------- | -------------------------- | -------------- | ---------------------------------------- |
+| Fixed      | CHAR(n)                    | CHAR(n)        | CHAR(n)                                  |
+| Variable   | VARCHAR(n)                 | VARCHAR(n)     | VARCHAR(n)                               |
+| Large Text | TEXT                       | TEXT           | TEXT (deprecated → use VARCHAR(MAX))     |
+| Unicode    | VARCHAR (utf8 supported)   | Native Unicode | NVARCHAR                                 |
+
+3. Date & Time Types
+
+| Feature  | MySQL                   | PostgreSQL  | SQL Server              |
+| -------- | ----------------------- | ----------- | ----------------------- |
+| Date     | DATE                    | DATE        | DATE                    |
+| Time     | TIME                    | TIME        | TIME                    |
+| DateTime | DATETIME, TIMESTAMP     | TIMESTAMP   | DATETIME, DATETIME2     |
+
+4. Boolean Type
+
+| MySQL                        | PostgreSQL               | SQL Server  |
+| ---------------------------- | ------------------------ | ----------- |
+| BOOLEAN (alias of TINYINT)   | BOOLEAN (true boolean)   | BIT (0/1)   |
+
+5. Special Types
+
+| Feature | MySQL             | PostgreSQL               | SQL Server                  |
+| ------- | ----------------- | ------------------------ | --------------------------- |
+| JSON    | JSON              | JSON, JSONB (faster)     | JSON (stored in NVARCHAR)   |
+| UUID    | UUID() function   | UUID type                | UNIQUEIDENTIFIER            |
+| Array   | ❌Not supported   | ✅ Supported            | ❌ Not supported            |
+
+SQL Data Types – MCQs
+----------------------------------------------------------------------------------------------------------------------------------------
+1. What is a data type in SQL?
+A) A table
+B) A column name
+C) Defines the type of data stored
+D) A database
+2. Which data type is used to store whole numbers?
+A) VARCHAR
+B) INT
+C) DATE
+D) TEXT
+3. Which data type is best for storing names?
+A) INT
+B) BOOLEAN
+C) VARCHAR
+D) FLOAT
+4. Which data type stores date values?
+A) TIME
+B) DATE
+C) INT
+D) CHAR
+5. BOOLEAN data type stores:
+A) Numbers
+B) Text
+C) TRUE or FALSE
+D) Dates
+6. What does VARCHAR stand for?
+A) Variable Character
+B) Value Character
+C) Verified Character
+D) Virtual Character
+7. Which data type is used for storing large text?
+A) CHAR
+B) VARCHAR
+C) TEXT
+D) INT
+8. Which is a fixed-length data type?
+A) VARCHAR
+B) TEXT
+C) CHAR
+D) FLOAT
+9. Which data type is suitable for storing salary?
+A) INT
+B) DECIMAL
+C) CHAR
+D) DATE
+10. Which data type stores both date and time?
+A) DATE
+B) TIME
+C) DATETIME
+D) CHAR
+11. What is the difference between CHAR and VARCHAR?
+A) No difference
+B) CHAR is fixed length
+C) VARCHAR is fixed length
+D) Both are numeric
+12. Which data type is used for approximate values?
+A) DECIMAL
+B) FLOAT
+C) INT
+D) DATE
+13. In many databases, BOOLEAN is stored as:
+A) TEXT
+B) DATE
+C) 1 and 0
+D) FLOAT
+14. Which data type is best for storing images?
+A) VARCHAR
+B) INT
+C) BLOB
+D) DATE
+15. What does DECIMAL(10,2) mean?
+A) 10 digits total, 2 after decimal
+B) 2 digits total
+C) Only integers
+D) 10 decimals
