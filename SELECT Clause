@@ -1,0 +1,60 @@
+✅ SELECT Clause
+    -> The SELECT clause in SQL is used to retrieve data from a database table.
+    -> It specifies which columns or data you want to see in the result.
+                OR
+    -> SELECT tells the database what to show.
+
+General Syntax
+SELECT column1, column2, ...
+FROM table_name;
+
+Example with Table and Output
+Table: students
+    | id | name  | age | city   |
+    | -- | ----- | --- | ------ |
+    | 1  | Ravi  | 18  | Delhi  |
+    | 2  | Anya  | 20  | Mumbai |
+    | 3  | Kiran | 19  | Delhi  |
+
+Example 1: Select specific columns
+    SELECT name, age
+    FROM students;
+Output
+    | name  | age |
+    | ----- | --- |
+    | Ravi  | 18  |
+    | Anya  | 20  |
+    | Kiran | 19  |
+-> Only name and age are shown.
+
+Example 2: Select all columns
+    SELECT *
+    FROM students;
+Output
+    | id | name  | age | city   |
+    | -- | ----- | --- | ------ |
+    | 1  | Ravi  | 18  | Delhi  |
+    | 2  | Anya  | 20  | Mumbai |
+    | 3  | Kiran | 19  | Delhi  |
+-> `*` means all columns.
+
+Example 3: Using DISTINCT
+    SELECT DISTINCT city
+    FROM students;
+Output:
+    | city   |
+    | ------ |
+    | Delhi  |
+    | Mumbai |
+
+-> Duplicate “Delhi” is removed.
+
+Example 4: Using calculation
+    SELECT name, age + 1 AS next_age
+    FROM students;
+Output
+    | name  | next_age |
+    | ----- | -------- |
+    | Ravi  | 19       |
+    | Anya  | 21       |
+    | Kiran | 20       |
