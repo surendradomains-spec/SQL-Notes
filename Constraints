@@ -1,0 +1,240 @@
+✅ What are Constraints in SQL?
+--> Constraints are rules applied to columns in a table to control the type of data that can be inserted.
+They ensure:
+  -> Data accuracy
+  -> Data consistency
+  -> Data integrity
+OR 
+    Constraints are like restrictions or conditions on data in a database.
+
+✅ Types of Constraints in SQL
+
+                          SQL CONSTRAINTS
+                                │
+               ┌───────────────┼───────────────┐
+               │               │               │
+            NOT NULL        UNIQUE       PRIMARY KEY
+                                               │
+                                               │
+                                         FOREIGN KEY
+               │               │               │
+             CHECK          DEFAULT         (Relation)
+
+✅ Types of Constraints in SQL:
+
+1. NOT NULL Constraint
+    -> Ensures that a column **cannot have NULL (empty) values**.
+Example:
+    CREATE TABLE students (
+        name VARCHAR(50) NOT NULL
+    );
+Explanation:
+    -> Every record must contain a value for name
+    -> You cannot leave it empty
+Real-life Example:
+    A registration form where name is mandatory
+
+2. UNIQUE Constraint
+    -> Ensures that all values in a column are different (no duplicates)
+Example:
+    CREATE TABLE users (
+        email VARCHAR(100) UNIQUE
+    );
+Explanation:
+    -> No two users can have the same email
+    -> Prevents duplicate entries
+Real-life Example:
+    -> Email ID or phone number
+
+3. PRIMARY KEY Constraint
+    -> A column (or group of columns) that:
+    -> Uniquely identifies each record
+    -> Cannot be NULL
+    -> Must be UNIQUE
+Example:
+    CREATE TABLE students (
+        id INT PRIMARY KEY
+    );
+Explanation:
+    -> Each student has a unique ID
+    -> No duplicates and no NULL values allowed
+Real-life Example:
+    Roll number, Aadhaar number
+
+4. FOREIGN KEY Constraint
+    -> Used to link two tables and maintain relationships
+Example:
+    CREATE TABLE orders (
+        order_id INT PRIMARY KEY,
+        user_id INT,
+        FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+Explanation:
+    -> user_id in orders must exist in users table
+    -> Prevents invalid data relationships
+Real-life Example:
+    -> Student ID in marks table must exist in student table
+
+5. CHECK Constraint
+  -> Ensures that values satisfy a **specific condition**
+
+Example:
+    CREATE TABLE employees (
+        age INT CHECK (age >= 18)
+    );
+Explanation:
+    -> Age must be 18 or above
+    -> Prevents invalid data entry
+Real-life Example:
+    Minimum age requirement
+
+6. DEFAULT Constraint
+    Assigns a default value if no value is provided
+Example:
+    CREATE TABLE orders (
+        status VARCHAR(20) DEFAULT 'Pending'
+    );
+Explanation:
+  -> If no status is given → automatically "Pending"
+Real-life Example:
+    -> Order status = Pending by default
+----------------------------------------------
+| Constraint  | Description                  |
+| ----------- | ---------------------------- |
+| NOT NULL    | Cannot store NULL values     |
+| UNIQUE      | No duplicate values          |
+| PRIMARY KEY | Unique + Not Null identifier |
+| FOREIGN KEY | Links two tables             |
+| CHECK       | Applies condition            |
+| DEFAULT     | Sets default value           |
+----------------------------------------------------------------------------------------------------------------------------------------
+
+2-Mark Questions
+----------------------------------------------------------------------------------------------------------------------------------------
+1. What are constraints in SQL?
+2. Define NOT NULL constraint.
+3. What is UNIQUE constraint?
+4. What is PRIMARY KEY?
+5. What is FOREIGN KEY?
+6. What is CHECK constraint?
+7. What is DEFAULT constraint?
+8. What is the purpose of constraints in SQL?
+9. Can a PRIMARY KEY contain NULL values?
+10. What is the difference between UNIQUE and PRIMARY KEY?
+
+5-Mark Questions
+---------------------------------------------------------------------------------------------------------------------------------------
+1. What are SQL constraints? Explain their types.
+2. Explain PRIMARY KEY and FOREIGN KEY with examples.
+3. Describe different types of constraints in SQL.
+4. Explain NOT NULL, UNIQUE, and CHECK constraints with examples.
+5. What is a FOREIGN KEY? Explain its importance.
+6. Explain all SQL constraints with syntax and examples.
+7. Differentiate between PRIMARY KEY and UNIQUE constraint.
+8. Explain how constraints help maintain data integrity.
+
+Long Answer / 10-Mark Questions
+----------------------------------------------------------------------------------------------------------------------------------------
+1. What are constraints in SQL? Explain all types with suitable examples.
+2. Discuss the role of constraints in maintaining data integrity in a database.
+3. Explain different SQL constraints with real-life examples.
+4. Write a detailed note on PRIMARY KEY and FOREIGN KEY constraints.
+
+SQL Constraints – MCQs
+----------------------------------------------------------------------------------------------------------------------------------------
+1. What is a constraint in SQL?
+A) A type of query
+B) A rule applied to a column
+C) A database
+D) A table
+2. Which constraint prevents NULL values?
+A) UNIQUE
+B) PRIMARY KEY
+C) NOT NULL
+D) CHECK
+3. Which constraint ensures all values are unique?
+A) NOT NULL
+B) UNIQUE
+C) CHECK
+D) DEFAULT
+4. Which constraint uniquely identifies each record?
+A) UNIQUE
+B) CHECK
+C) PRIMARY KEY
+D) DEFAULT
+5. How many PRIMARY KEYs are allowed per table?
+A) One
+B) Two
+C) Many
+D) Zero
+6. Which constraint is used to link two tables?
+A) UNIQUE
+B) FOREIGN KEY
+C) CHECK
+D) DEFAULT
+7. Which constraint is used to set a default value?
+A) NOT NULL
+B) UNIQUE
+C) DEFAULT
+D) CHECK
+8. Which constraint checks a condition before inserting data?
+A) DEFAULT
+B) CHECK
+C) UNIQUE
+D) PRIMARY KEY
+9. Can a UNIQUE column contain NULL values?
+A) Yes
+B) No
+C) Only one NULL
+D) Depends on DBMS
+10. PRIMARY KEY is a combination of:
+A) NOT NULL + CHECK
+B) UNIQUE + DEFAULT
+C) NOT NULL + UNIQUE
+D) CHECK + FOREIGN KEY
+11. Which of the following can have multiple columns?
+A) NOT NULL
+B) PRIMARY KEY
+C) CHECK
+D) DEFAULT
+12. What happens if you insert duplicate values in a UNIQUE column?
+A) Allowed
+B) Error
+C) Converted to NULL
+D) Ignored
+13. FOREIGN KEY references which key?
+A) UNIQUE KEY
+B) PRIMARY KEY
+C) CHECK KEY
+D) DEFAULT KEY
+14. Which constraint enforces referential integrity?
+A) CHECK
+B) DEFAULT
+C) FOREIGN KEY
+D) NOT NULL
+15. Which constraint is used for age ≥ 18 condition?
+A) UNIQUE
+B) CHECK
+C) DEFAULT
+D) PRIMARY KEY
+16. Can a table have both PRIMARY KEY and UNIQUE?
+A) Yes
+B) No
+17. Can PRIMARY KEY contain duplicate values?
+A) Yes
+B) No
+18. Which constraint is optional while inserting data?
+A) NOT NULL
+B) DEFAULT
+C) PRIMARY KEY
+D) FOREIGN KEY
+19. Which constraint ensures data validity based on condition?
+A) CHECK
+B) UNIQUE
+C) NOT NULL
+D) DEFAULT
+20. FOREIGN KEY can accept:
+A) Any value
+B) Only NULL
+C) Values present in parent table
+D) Duplicate values only
