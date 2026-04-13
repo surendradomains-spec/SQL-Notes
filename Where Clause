@@ -1,0 +1,89 @@
+✅ What is the WHERE Clause?
+  --> It specifies a condition that each row must satisfy.
+                      OR
+  --> Give me only the rows where this condition is true.
+
+✅ Basic Syntax
+    SELECT column1, column2
+    FROM table_name
+    WHERE condition;
+
+✅ Example
+-> Suppose you have a table Employees:
+    | id | name  | salary | department |
+    | -- | ----- | ------ | ---------- |
+    | 1  | Asha  | 50000  | HR         |
+    | 2  | Ravi  | 70000  | IT         |
+    | 3  | Meena | 60000  | HR         |
+
+Query:
+    SELECT * 
+    FROM Employees
+    WHERE department = 'HR';
+Output:
+ Asha
+ Meena
+
+✅ Common Operators in WHERE
+    Comparison Operators
+    =      -- equal
+    !=     -- not equal
+    >      -- greater than
+    <      -- less than
+    >=     -- greater or equal
+    <=     -- less or equal
+
+✅ Logical Operators
+    AND    -- both conditions must be true
+    OR     -- at least one condition true
+    NOT    -- reverses condition
+Example:
+    SELECT * 
+    FROM Employees
+    WHERE salary > 50000 AND department = 'IT';
+
+✅ Other Useful Conditions
+i. IN
+  WHERE department IN ('HR', 'IT')
+ii. BETWEEN
+  WHERE salary BETWEEN 50000 AND 70000
+iii. LIKE (pattern matching)
+    WHERE name LIKE 'A%'   -- starts with A
+iv. IS NULL
+    WHERE salary IS NULL
+
+✅ Order of Execution in SQL
+Even though we write SQL like this:
+    SELECT column
+    FROM table
+    WHERE condition
+    GROUP BY column
+    HAVING condition
+    ORDER BY column;
+
+-> SQL executes in this actual order:
+    1. FROM → selects table
+    2. WHERE → filters rows
+    3. GROUP BY → groups rows
+    4. HAVING → filters groups
+    5. SELECT → chooses columns
+    6. ORDER BY → sorts result
+
+✅ Important Notes
+-> WHERE works before grouping.
+-> It cannot use aggregate functions like SUM(), AVG()
+  Wrong:
+      WHERE SUM(salary) > 50000
+  ✔ Correct:
+      HAVING SUM(salary) > 50000
+
+✅ WHERE in Other Commands
+1. UPDATE
+    UPDATE Employees
+    SET salary = 80000
+    WHERE id = 2;
+2. DELETE
+    DELETE FROM Employees
+    WHERE department = 'HR';
+
+-> Without WHERE all rows are affected!
