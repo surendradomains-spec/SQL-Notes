@@ -1,0 +1,145 @@
+SQL Operators
+SQL operators are symbols used to compare values, perform calculations, and combine conditions in a query.
+
+1. Arithmetic Operators
+Used for mathematical calculations.
+  | Operator | Meaning        | Example         |
+  | -------- | -------------- | --------------- |
+  | +        | Addition       | salary + 1000   |
+  | -        | Subtraction    | salary - 500    |
+  | *        | Multiplication | salary * 2      |
+  | /        | Division       | salary / 2      |
+  | %        | Modulus        | salary % 2      |
+Example:
+SELECT name, salary * 12 AS annual_salary
+FROM Employees;
+
+2. Comparison (Relational) Operators
+Used to compare values.
+  | Operator     | Meaning               |
+  | ------------ | --------------------- |
+  | =            | Equal                 |
+  | != or <>     | Not equal             |
+  | >            | Greater than          |
+  | <            | Less than             |
+  | >=           | Greater than or equal |
+  | <=           | Less than or equal    |
+Example:
+  SELECT * 
+  FROM Employees
+  WHERE salary > 50000;
+
+3. Logical Operators
+Used to combine multiple conditions.
+  | Operator | Meaning                     |
+  | -------- | --------------------------- |
+  | AND      | All conditions must be true |
+  | OR       | At least one condition true |
+  | NOT      | Negates condition           |
+Example:
+  SELECT *
+  FROM Employees
+  WHERE department = 'IT' AND salary > 60000;
+
+4. Special Operators**
+✅ IN
+Checks if a value matches any value in a list.
+  SELECT *
+  FROM Employees
+  WHERE department IN ('HR', 'IT');
+✅ BETWEEN
+Checks a range.
+    SELECT *
+    FROM Employees
+    WHERE salary BETWEEN 50000 AND 70000;
+✅ LIKE
+Used for pattern matching.
+  | Pattern | Meaning                  |
+  | ------- | ------------------------ |
+  | %       | Any number of characters |
+  | _       | Single character         |
+SELECT *
+FROM Employees
+WHERE name LIKE 'A%';
+✅ IS NULL
+Checks for NULL values.
+  SELECT *
+  FROM Employees
+  WHERE salary IS NULL;
+✅ EXISTS
+Checks if a subquery returns any rows.
+  SELECT name
+  FROM Employees e
+  WHERE EXISTS (
+      SELECT 1 FROM Departments d
+      WHERE d.id = e.department_id
+  );
+✅ ANY / ALL
+i. ANY
+WHERE salary > ANY (SELECT salary FROM Employees WHERE department = 'HR')
+ii. ALL
+WHERE salary > ALL (SELECT salary FROM Employees WHERE department = 'HR')
+
+5. Bitwise Operators (DB-specific)
+  | Operator | Meaning |    |
+  | -------- | ------- | -- |
+  | &        | AND     |    |
+  |          |         | OR |
+  | ^        | XOR     |    |
+
+✅ Operator Precedence (Order of Evaluation)
+SQL evaluates operators in this order:**
+
+1. () (parentheses)
+2. *, /, %
+3. +, -
+4. Comparison operators (=, >, <)
+5. NOT
+6. AND
+7. OR
+---------------------------------------------------------------------------------------------------------------------------------------
+⭐ Most Important
+
+1. What are SQL operators?
+2. What are the different types of SQL operators?
+3. Difference between = and <>?
+4. What is the use of logical operators (AND, OR, NOT)?
+5. What is operator precedence in SQL?
+6. Difference between WHERE and HAVING?
+7. Why can't we use aggregate functions in WHERE?
+8. Difference between IN and EXISTS?
+9. Difference between BETWEEN and IN?
+10. Difference between ANY and ALL?
+11. What is the output?
+SELECT * 
+FROM Employees
+WHERE salary > 50000 AND department = 'HR';
+12. What is the output?
+SELECT * 
+FROM Employees
+WHERE salary > 50000 OR department = 'HR';
+13. What is the output?
+SELECT * 
+FROM Employees
+WHERE NOT department = 'IT';
+14. What is the difference between:
+WHERE salary BETWEEN 50000 AND 70000
+and
+WHERE salary >= 50000 AND salary <= 70000
+15. What happens if you use:
+WHERE salary = NULL;
+16. Which is correct and why?
+WHERE name LIKE 'A%'
+vs
+WHERE name = 'A%'
+17. Write a query using `IN` to filter multiple values.
+18. Write a query using `EXISTS`.
+19. Write a query using `ANY` and `ALL`.
+20. Explain how `LIKE` works with `%` and `_`.
+21. How does SQL evaluate multiple conditions in a query?
+22. What is the order of execution of SQL clauses?
+23. Can we use multiple operators in a single query? Explain with example.
+24. What is the difference between `AND` vs `OR` with example?
+25. How do NULL values behave with comparison operators?
+
+
