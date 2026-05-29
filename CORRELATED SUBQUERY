@@ -1,0 +1,312 @@
+WHAT IS A SUBQUERY?
+-------------------
+A Subquery is a query written inside another query.
+It is also called:
+  Nested Query
+  Inner Query
+
+================================================================================
+TYPES OF SUBQUERIES
+================================================================================
+
+1. Non-Correlated Subquery
+2. Correlated Subquery
+
+================================================================================
+WHAT IS A CORRELATED SUBQUERY?
+================================================================================
+
+A Correlated Subquery is a subquery that depends on the outer query.
+The inner query executes once for every row processed by the outer query.
+
+Simple Definition:
+  Inner query depends on outer query values.
+
+================================================================================
+SYNTAX
+================================================================================
+
+  SELECT column_name
+  FROM table1 outer_table
+  WHERE column_name operator
+  (
+      SELECT column_name
+      FROM table2 inner_table
+      WHERE inner_table.column = outer_table.column
+  );
+
+Important: The subquery cannot run independently because it uses values from
+the outer query.
+
+================================================================================
+EXAMPLE TABLE: EMPLOYEES
+================================================================================
+
++--------+----------+------------+--------+
+| emp_id | emp_name | department | salary |
++--------+----------+------------+--------+
+| 1      | Ravi     | HR         | 30000  |
+| 2      | Priya    | IT         | 60000  |
+| 3      | Arun     | HR         | 40000  |
+| 4      | Kiran    | IT         | 50000  |
+| 5      | Meena    | Sales      | 45000  |
++--------+----------+------------+--------+
+
+================================================================================
+PROBLEM STATEMENT
+================================================================================
+
+Find employees whose salary is greater than the average salary of their
+department.
+
+================================================================================
+CORRELATED SUBQUERY EXAMPLE
+================================================================================
+
+Query:
+  SELECT emp_name, department, salary
+  FROM Employees e1
+  WHERE salary >
+  (
+      SELECT AVG(salary)
+      FROM Employees e2
+      WHERE e1.department = e2.department
+  );
+
+Output:
++----------+------------+--------+
+| emp_name | department | salary |
++----------+------------+--------+
+| Arun     | HR         | 40000  |
+| Priya    | IT         | 60000  |
++----------+------------+--------+
+
+================================================================================
+HOW CORRELATED SUBQUERY WORKS - STEP BY STEP
+================================================================================
+
+Step 1: Outer query takes first row: Ravi | HR | 30000
+
+Step 2: Inner query runs for HR department:
+        SELECT AVG(salary) FROM Employees WHERE department = 'HR';
+        Average = (30000 + 40000) / 2 = 35000
+
+Step 3: Compare condition: 30000 > 35000 → FALSE → Ravi is rejected.
+
+Step 4: Outer query takes next row: Priya | IT | 60000
+
+Step 5: Inner query runs for IT department:
+        SELECT AVG(salary) FROM Employees WHERE department = 'IT';
+        Average = (60000 + 50000) / 2 = 55000
+
+Step 6: Compare condition: 60000 > 55000 → TRUE → Priya is selected.
+
+Step 7: Repeat for all rows.
+
+================================================================================
+EXECUTION DIAGRAM (Text Representation)
+================================================================================
+
+For a row that fails (Ravi):
+
+  +----------------------+
+  | Outer Query Row      |
+  | Ravi | HR | 30000    |
+  +----------------------+
+            ↓
+  +----------------------+
+  | Inner Query Executes |
+  | AVG(HR Salary)=35000 |
+  +----------------------+
+            ↓
+  +----------------------+
+  | 30000 > 35000 ?      |
+  | FALSE                |
+  +----------------------+
+            ↓
+       Row Rejected
+
+For a row that succeeds (Priya):
+
+  +----------------------+
+  | Outer Query Row      |
+  | Priya | IT | 60000   |
+  +----------------------+
+            ↓
+  +----------------------+
+  | Inner Query Executes |
+  | AVG(IT Salary)=55000 |
+  +----------------------+
+            ↓
+  +----------------------+
+  | 60000 > 55000 ?      |
+  | TRUE                 |
+  +----------------------+
+            ↓
+      Row Selected
+
+================================================================================
+KEY CHARACTERISTICS OF CORRELATED SUBQUERY
+================================================================================
+
++----------------+---------------------------------------------+
+| Feature        | Description                                 |
++----------------+---------------------------------------------+
+| Dependency     | Depends on outer query                      |
+| Execution      | Runs once for each outer row                |
+| Performance    | Slower for large data                       |
+| Common Usage   | Comparisons, EXISTS, NOT EXISTS             |
++----------------+---------------------------------------------+
+
+================================================================================
+CORRELATED vs NON-CORRELATED SUBQUERY
+================================================================================
+
++----------------------------+--------------------------------+
+| Correlated Subquery        | Non-Correlated Subquery        |
++----------------------------+--------------------------------+
+| Depends on outer query     | Independent                    |
+| Executes repeatedly        | Executes once                  |
+| Slower                     | Faster                         |
+| Uses outer table values    | No outer reference             |
++----------------------------+--------------------------------+
+
+Non-Correlated Example (runs once):
+  SELECT emp_name FROM Employees
+  WHERE salary > (SELECT AVG(salary) FROM Employees);
+
+Correlated Example (runs per row):
+  SELECT emp_name FROM Employees e1
+  WHERE salary > (SELECT AVG(salary) FROM Employees e2
+                  WHERE e1.department = e2.department);
+
+================================================================================
+EXISTS WITH CORRELATED SUBQUERY
+================================================================================
+
+What is EXISTS?
+  EXISTS checks whether subquery returns rows.
+
+Example – Find departments having employees with salary > 50000:
+  SELECT DISTINCT department
+  FROM Employees e1
+  WHERE EXISTS
+  (
+      SELECT *
+      FROM Employees e2
+      WHERE e1.department = e2.department
+      AND salary > 50000
+  );
+
+EXISTS Execution Flow:
+  Outer Row
+      ↓
+  Subquery Executes
+      ↓
+  Rows Found?
+      ↓
+  YES → TRUE
+  NO  → FALSE
+
+================================================================================
+NOT EXISTS EXAMPLE
+================================================================================
+
+Find departments without employees earning > 50000:
+  SELECT DISTINCT department
+  FROM Employees e1
+  WHERE NOT EXISTS
+  (
+      SELECT *
+      FROM Employees e2
+      WHERE e1.department = e2.department
+      AND salary > 50000
+  );
+
+================================================================================
+SQL EXECUTION ORDER FOR CORRELATED SUBQUERY
+================================================================================
+
++------+-----------------------------------+
+| Step | Operation                         |
++------+-----------------------------------+
+| 1    | Outer query starts                |
+| 2    | First outer row selected          |
+| 3    | Inner query executes              |
+| 4    | Condition checked                 |
+| 5    | TRUE/FALSE decided                |
+| 6    | Next outer row processed          |
+| 7    | Repeat until all rows complete    |
++------+-----------------------------------+
+
+================================================================================
+PERFORMANCE ISSUE
+================================================================================
+
+Correlated subqueries are slower because:
+  Inner query executes repeatedly.
+
+For 1000 rows:
+  Inner query may execute 1000 times.
+
+Optimization Tip:
+  Sometimes JOIN gives better performance.
+
+================================================================================
+CORRELATED SUBQUERY USING JOIN (Alternative)
+================================================================================
+
+Same query rewritten with JOIN:
+  SELECT e1.emp_name, e1.department, e1.salary
+  FROM Employees e1
+  JOIN
+  (
+      SELECT department, AVG(salary) AS avg_salary
+      FROM Employees
+      GROUP BY department
+  ) e2
+  ON e1.department = e2.department
+  WHERE e1.salary > e2.avg_salary;
+
+================================================================================
+ADVANTAGES AND DISADVANTAGES
+================================================================================
+
+Advantages:
+  1. Easy to write complex conditions
+  2. Good for row-by-row comparison
+  3. Useful with EXISTS and NOT EXISTS
+
+Disadvantages:
+  1. Slower performance
+  2. Executes repeatedly
+  3. Expensive for large tables
+
+================================================================================
+QUICK REVISION
+================================================================================
+
+Correlated Subquery:
+  Inner query depends on outer query.
+  Executes once per outer row.
+  Used with EXISTS, comparisons.
+
+Memory Trick:
+  Correlated = Connected
+  Inner query connected to outer query.
+
+================================================================================
+INTERVIEW POINTS
+================================================================================
+
+1. Correlated subquery depends on outer query.
+2. Executes once per outer row.
+3. Uses outer query columns inside subquery.
+4. EXISTS commonly uses correlated subqueries.
+5. Slower than normal subqueries.
+6. JOIN can sometimes replace correlated subqueries.
+7. Cannot execute independently.
+
+================================================================================
+END OF GUIDE
+================================================================================
