@@ -1,0 +1,331 @@
+WHAT ARE FUNCTIONS IN SQL?
+--------------------------
+Functions in SQL are used to perform operations on data and return a result.
+Functions help in:
+  • Calculations
+  • Data formatting
+  • String operations
+  • Date operations
+  • Aggregate calculations
+
+================================================================================
+TYPES OF SQL FUNCTIONS
+================================================================================
+
+SQL functions are mainly divided into:
+  1. Single Row Functions
+  2. Aggregate Functions
+
+================================================================================
+1. SINGLE ROW FUNCTIONS
+================================================================================
+
+Single row functions work on one row at a time and return one result for each row.
+
+Types:
+  • String Functions
+  • Number Functions
+  • Date Functions
+  • Conversion Functions
+
+================================================================================
+2. AGGREGATE FUNCTIONS
+================================================================================
+
+Aggregate functions work on multiple rows and return one result.
+Examples: COUNT(), SUM(), AVG(), MAX(), MIN()
+
+================================================================================
+STRING FUNCTIONS
+================================================================================
+
+Used to manipulate text values.
+
+-------------------------------------------------------------------------------
+UPPER() - Converts text to uppercase
+
+Syntax:
+  SELECT UPPER(column_name) FROM table_name;
+
+Example:
+  SELECT UPPER(emp_name) FROM Employees;
+
+Output:
+  RAVI
+  PRIYA
+
+-------------------------------------------------------------------------------
+LOWER() - Converts text to lowercase
+
+Example:
+  SELECT LOWER(emp_name) FROM Employees;
+
+-------------------------------------------------------------------------------
+LENGTH() - Returns length of string
+
+Example:
+  SELECT LENGTH(emp_name) FROM Employees;
+
+-------------------------------------------------------------------------------
+CONCAT() - Combines strings
+
+Example:
+  SELECT CONCAT(first_name, last_name) FROM Employees;
+
+-------------------------------------------------------------------------------
+SUBSTRING() - Extracts part of string
+
+Syntax:
+  SELECT SUBSTRING(column_name, start, length) FROM table_name;
+
+Example:
+  SELECT SUBSTRING('DATABASE', 1, 4);
+
+Output:
+  DATA
+
+-------------------------------------------------------------------------------
+TRIM() - Removes spaces from beginning and end
+
+Example:
+  SELECT TRIM('   SQL   ');
+
+Output:
+  SQL
+
+String Functions Execution Example (UPPER('sql')):
+  Step 1: Take input string -> "sql"
+  Step 2: Convert each character to uppercase -> "SQL"
+  Step 3: Return result.
+
+================================================================================
+NUMBER FUNCTIONS
+================================================================================
+
+Used for numeric calculations.
+
+-------------------------------------------------------------------------------
+ROUND() - Rounds number to specified decimals
+
+Example:
+  SELECT ROUND(45.678, 2);
+
+Output:
+  45.68
+
+-------------------------------------------------------------------------------
+CEIL() / CEILING() - Returns smallest integer >= value
+
+Example:
+  SELECT CEIL(45.2);
+
+Output:
+  46
+
+-------------------------------------------------------------------------------
+FLOOR() - Returns largest integer <= value
+
+Example:
+  SELECT FLOOR(45.9);
+
+Output:
+  45
+
+-------------------------------------------------------------------------------
+MOD() - Returns remainder
+
+Example:
+  SELECT MOD(10, 3);
+
+Output:
+  1
+
+-------------------------------------------------------------------------------
+ABS() - Returns absolute positive value
+
+Example:
+  SELECT ABS(-20);
+
+Output:
+  20
+
+-------------------------------------------------------------------------------
+SQRT() - Returns square root
+
+Example:
+  SELECT SQRT(25);
+
+Output:
+  5
+
+Number Function Execution Example (ROUND(12.567, 2)):
+  Step 1: Take number -> 12.567
+  Step 2: Check decimal position.
+  Step 3: Round value -> 12.57
+
+================================================================================
+DATE FUNCTIONS
+================================================================================
+
+Used to work with dates and time.
+
+-------------------------------------------------------------------------------
+NOW() - Returns current date and time
+
+Example:
+  SELECT NOW();
+
+-------------------------------------------------------------------------------
+CURDATE() - Returns current date
+
+Example:
+  SELECT CURDATE();
+
+-------------------------------------------------------------------------------
+CURTIME() - Returns current time
+
+Example:
+  SELECT CURTIME();
+
+-------------------------------------------------------------------------------
+DATEDIFF() - Returns difference between two dates
+
+Example:
+  SELECT DATEDIFF('2026-06-01', '2026-05-20');
+
+Output:
+  12
+
+-------------------------------------------------------------------------------
+DATE_ADD() - Adds days/months/years to date
+
+Example:
+  SELECT DATE_ADD('2026-05-29', INTERVAL 5 DAY);
+
+-------------------------------------------------------------------------------
+YEAR(), MONTH(), DAY() - Extract parts of date
+
+Example:
+  SELECT YEAR('2026-05-29');
+
+Output:
+  2026
+
+Date Function Execution Example (YEAR('2026-05-29')):
+  Step 1: Take date.
+  Step 2: Extract year portion -> 2026
+  Step 3: Return result.
+
+================================================================================
+CONVERSION FUNCTIONS
+================================================================================
+
+Used to convert one datatype to another.
+
+-------------------------------------------------------------------------------
+CAST() - Converts datatype
+
+Syntax:
+  SELECT CAST(value AS datatype);
+
+Example:
+  SELECT CAST(25.78 AS INT);
+
+Output:
+  25
+
+-------------------------------------------------------------------------------
+CONVERT() - Another conversion function
+
+Example:
+  SELECT CONVERT('2026-05-29', DATE);
+
+================================================================================
+AGGREGATE FUNCTIONS
+================================================================================
+
+Aggregate functions operate on multiple rows.
+
+COUNT() - Counts rows
+  SELECT COUNT(*) FROM Employees;
+
+SUM() - Calculates total
+  SELECT SUM(salary) FROM Employees;
+
+AVG() - Returns average
+  SELECT AVG(salary) FROM Employees;
+
+MAX() - Returns highest value
+  SELECT MAX(salary) FROM Employees;
+
+MIN() - Returns lowest value
+  SELECT MIN(salary) FROM Employees;
+
+================================================================================
+DIFFERENCE BETWEEN SINGLE ROW AND AGGREGATE FUNCTIONS
+================================================================================
+
++--------------------------+--------------------------+
+| Single Row Functions     | Aggregate Functions      |
++--------------------------+--------------------------+
+| Work on one row          | Work on multiple rows    |
+| Return one result per row| Return one result        |
+| Example: UPPER()         | Example: SUM()           |
++--------------------------+--------------------------+
+
+================================================================================
+SQL FUNCTION EXECUTION ORDER (EXAMPLE)
+================================================================================
+
+Query:
+  SELECT department, AVG(salary)
+  FROM Employees
+  GROUP BY department;
+
+Execution Flow:
+  Step 1 (FROM)      → Read Employees table
+  Step 2 (GROUP BY)  → Create groups
+  Step 3 (AVG)       → Calculate average
+  Step 4 (SELECT)    → Display output
+
+================================================================================
+IMPORTANT RULES
+================================================================================
+
+1. Functions simplify calculations.
+2. Aggregate functions ignore NULL values.
+3. String functions work on text data.
+4. Date functions work on date/time values.
+5. Conversion functions change datatypes.
+
+================================================================================
+QUICK REVISION TABLE
+================================================================================
+
++----------------+--------------------------------+
+| Function Type  | Examples                       |
++----------------+--------------------------------+
+| String         | UPPER, LOWER, CONCAT, TRIM     |
+| Number         | ROUND, FLOOR, CEIL, MOD, ABS   |
+| Date           | NOW, CURDATE, DATEDIFF, YEAR   |
+| Conversion     | CAST, CONVERT                  |
+| Aggregate      | COUNT, SUM, AVG, MAX, MIN      |
++----------------+--------------------------------+
+
+Memory Trick:
+  String     → Text operations
+  Number     → Calculations
+  Date       → Date & Time
+  Conversion → Change datatype
+  Aggregate  → Group calculations
+
+================================================================================
+INTERVIEW POINTS
+================================================================================
+
+1. SQL functions reduce manual calculations.
+2. Aggregate functions return single result.
+3. String functions manipulate text.
+4. Date functions handle date/time operations.
+5. CAST converts datatype explicitly.
+6. Functions can be used in SELECT, WHERE, HAVING, ORDER BY.
