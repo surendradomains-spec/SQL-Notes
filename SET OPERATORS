@@ -1,0 +1,353 @@
+WHAT ARE SET OPERATORS?
+-----------------------
+Set operators are used to combine results from two or more SELECT statements.
+They work on result sets.
+
+================================================================================
+TYPES OF SET OPERATORS
+================================================================================
+
+Main set operators in SQL:
+  1. UNION
+  2. UNION ALL
+  3. INTERSECT
+  4. EXCEPT / MINUS
+
+================================================================================
+IMPORTANT RULES FOR SET OPERATORS
+================================================================================
+
+Both queries must have:
+  1. Same number of columns
+  2. Same datatype columns
+  3. Same column order
+
+================================================================================
+EXAMPLE TABLES
+================================================================================
+
+Table A:
++----+-------+
+| id | name  |
++----+-------+
+| 1  | Ravi  |
+| 2  | Priya |
+| 3  | Arun  |
++----+-------+
+
+Table B:
++----+-------+
+| id | name  |
++----+-------+
+| 2  | Priya |
+| 3  | Arun  |
+| 4  | Kiran |
++----+-------+
+
+================================================================================
+1. UNION
+================================================================================
+
+Definition: Combines results and removes duplicate rows.
+
+Syntax:
+  SELECT column_name FROM table1
+  UNION
+  SELECT column_name FROM table2;
+
+Example:
+  SELECT name FROM TableA
+  UNION
+  SELECT name FROM TableB;
+
+Output:
++-------+
+| name  |
++-------+
+| Ravi  |
+| Priya |
+| Arun  |
+| Kiran |
++-------+
+
+Note: Duplicate values (Priya, Arun) are removed.
+
+UNION Execution (Step-by-Step):
+  Step 1: Execute first SELECT query -> Ravi, Priya, Arun
+  Step 2: Execute second SELECT query -> Priya, Arun, Kiran
+  Step 3: Combine results.
+  Step 4: Remove duplicate rows.
+  Step 5: Return final output.
+
+Diagram:
+  Query 1 Result
+       ↓
+  Query 2 Result
+       ↓
+  Combine Results
+       ↓
+  Remove Duplicates
+       ↓
+  Final Output
+
+================================================================================
+2. UNION ALL
+================================================================================
+
+Definition: Combines results including duplicates.
+
+Syntax:
+  SELECT column_name FROM table1
+  UNION ALL
+  SELECT column_name FROM table2;
+
+Example:
+  SELECT name FROM TableA
+  UNION ALL
+  SELECT name FROM TableB;
+
+Output:
++-------+
+| name  |
++-------+
+| Ravi  |
+| Priya |
+| Arun  |
+| Priya |
+| Arun  |
+| Kiran |
++-------+
+
+Duplicates are NOT removed.
+
+UNION vs UNION ALL:
++--------------------------+--------------------------+
+| UNION                    | UNION ALL                |
++--------------------------+--------------------------+
+| Removes duplicates       | Keeps duplicates         |
+| Slower                   | Faster                   |
+| Uses sorting/distinct    | No duplicate checking    |
++--------------------------+--------------------------+
+
+UNION ALL Execution:
+  Step 1: Execute first query.
+  Step 2: Execute second query.
+  Step 3: Append results directly.
+  Step 4: Return all rows.
+
+Diagram:
+  Query 1
+     ↓
+  Query 2
+     ↓
+  Append Results
+     ↓
+  Final Output
+
+================================================================================
+3. INTERSECT
+================================================================================
+
+Definition: Returns only common rows from both queries.
+
+Syntax:
+  SELECT column_name FROM table1
+  INTERSECT
+  SELECT column_name FROM table2;
+
+Example:
+  SELECT name FROM TableA
+  INTERSECT
+  SELECT name FROM TableB;
+
+Output:
++-------+
+| name  |
++-------+
+| Priya |
+| Arun  |
++-------+
+
+Only matching rows returned.
+
+INTERSECT Execution:
+  Step 1: Execute both queries.
+  Step 2: Compare rows.
+  Step 3: Keep common rows only.
+  Step 4: Return matching rows.
+
+Diagram:
+  Query 1 Rows
+       ↓
+  Compare
+       ↓
+  Query 2 Rows
+       ↓
+  Common Rows Returned
+
+================================================================================
+4. EXCEPT / MINUS
+================================================================================
+
+Definition: Returns rows from first query not present in second query.
+
+Important:
+  +----------------------+---------+
+  | Database             | Keyword |
+  +----------------------+---------+
+  | SQL Server/PostgreSQL| EXCEPT  |
+  | Oracle               | MINUS   |
+  +----------------------+---------+
+
+Syntax:
+  SELECT column_name FROM table1
+  EXCEPT
+  SELECT column_name FROM table2;
+
+Example:
+  SELECT name FROM TableA
+  EXCEPT
+  SELECT name FROM TableB;
+
+Output:
++------+
+| name |
++------+
+| Ravi |
++------+
+
+Rows existing only in first query.
+
+EXCEPT Execution:
+  Step 1: Execute first query.
+  Step 2: Execute second query.
+  Step 3: Compare rows.
+  Step 4: Remove matching rows.
+  Step 5: Return remaining rows.
+
+Diagram:
+  Query 1 Rows
+       ↓
+  Remove Query 2 Matches
+       ↓
+  Remaining Rows Returned
+
+================================================================================
+REAL-TIME EXAMPLE – ONLINE STORE CUSTOMERS
+================================================================================
+
+Amazon Customers:           Flipkart Customers:
++-------+                  +-------+
+| name  |                  | name  |
++-------+                  +-------+
+| Ravi  |                  | Priya |
+| Priya |                  | Arun  |
+| Arun  |                  | Kiran |
++-------+                  +-------+
+
+UNION:      All customers (Ravi, Priya, Arun, Kiran)
+INTERSECT:  Common customers (Priya, Arun)
+EXCEPT:     Amazon-only customers (Ravi)
+
+================================================================================
+ORDER BY WITH SET OPERATORS
+================================================================================
+
+ORDER BY comes at the end of the entire statement.
+
+Example:
+  SELECT name FROM TableA
+  UNION
+  SELECT name FROM TableB
+  ORDER BY name;
+
+================================================================================
+SQL EXECUTION ORDER FOR SET OPERATORS
+================================================================================
+
+Query:
+  SELECT name FROM TableA
+  UNION
+  SELECT name FROM TableB;
+
+Execution Flow:
+  Step 1: Execute first SELECT.
+  Step 2: Execute second SELECT.
+  Step 3: Apply set operator.
+  Step 4: Remove duplicates if needed (UNION).
+  Step 5: Return final result.
+
+================================================================================
+DIFFERENCE BETWEEN JOIN AND SET OPERATORS
+================================================================================
+
++--------------------------+--------------------------+
+| JOIN                     | Set Operators            |
++--------------------------+--------------------------+
+| Combines columns         | Combines rows            |
+| Uses related columns     | Uses query results       |
+| Horizontal merge         | Vertical merge           |
++--------------------------+--------------------------+
+
+================================================================================
+PERFORMANCE
+================================================================================
+
++------------+-------------+
+| Operator   | Performance |
++------------+-------------+
+| UNION      | Slower      |
+| UNION ALL  | Faster      |
++------------+-------------+
+
+Reason: UNION removes duplicates (requires sorting/hashing).
+
+================================================================================
+ADVANTAGES AND DISADVANTAGES
+================================================================================
+
+Advantages:
+  1. Combines multiple query results
+  2. Easy reporting
+  3. Useful for comparisons
+  4. Simple syntax
+
+Disadvantages:
+  1. Column count must match
+  2. Datatypes must match
+  3. UNION can be slower
+
+================================================================================
+QUICK REVISION
+================================================================================
+
++--------------+-----------------------------------+
+| Operator     | Purpose                           |
++--------------+-----------------------------------+
+| UNION        | Combine + remove duplicates       |
+| UNION ALL    | Combine + keep duplicates         |
+| INTERSECT    | Common rows                       |
+| EXCEPT/MINUS | Difference rows (first minus second) |
++--------------+-----------------------------------+
+
+Memory Trick:
+  UNION       → Combine
+  UNION ALL   → Combine everything
+  INTERSECT   → Common rows
+  EXCEPT      → Remove matching rows
+
+================================================================================
+INTERVIEW POINTS
+================================================================================
+
+1. Set operators combine query results vertically (row-wise).
+2. UNION removes duplicates.
+3. UNION ALL keeps duplicates (faster).
+4. INTERSECT returns common rows.
+5. EXCEPT/MINUS returns rows from first query not in second.
+6. Column count and datatype must match between queries.
+7. UNION ALL performs better than UNION.
+8. ORDER BY can only be used at the end of the compound query.
+```
+
+Save this content as `set_operators_guide.txt`. It's plain text, well‑structured, and follows the same format as your previous SQL guides.
