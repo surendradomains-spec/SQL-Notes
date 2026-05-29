@@ -1,0 +1,432 @@
+WHAT ARE WINDOW FUNCTIONS?
+--------------------------
+Window functions perform calculations across a set of rows related to the current row.
+
+Unlike aggregate functions:
+  • Aggregate functions return one result per group
+  • Window functions return one result for every row
+
+Simple Definition:
+  Window functions calculate values without collapsing rows.
+
+================================================================================
+SYNTAX
+================================================================================
+
+  SELECT column_name,
+         window_function() OVER (
+             PARTITION BY column_name
+             ORDER BY column_name
+         )
+  FROM table_name;
+
+================================================================================
+IMPORTANT KEYWORDS
+================================================================================
+
++----------------+--------------------------------+
+| Keyword        | Meaning                        |
++----------------+--------------------------------+
+| OVER()         | Defines window                 |
+| PARTITION BY   | Creates groups                 |
+| ORDER BY       | Defines row order              |
+| Window Function| Performs calculation           |
++----------------+--------------------------------+
+
+================================================================================
+EXAMPLE TABLE: EMPLOYEES
+================================================================================
+
++--------+----------+------------+--------+
+| emp_id | emp_name | department | salary |
++--------+----------+------------+--------+
+| 1      | Ravi     | HR         | 30000  |
+| 2      | Priya    | IT         | 60000  |
+| 3      | Arun     | HR         | 40000  |
+| 4      | Kiran    | IT         | 50000  |
+| 5      | Meena    | Sales      | 45000  |
++--------+----------+------------+--------+
+
+================================================================================
+TYPES OF WINDOW FUNCTIONS
+================================================================================
+
+Main window functions:
+  1. ROW_NUMBER()
+  2. RANK()
+  3. DENSE_RANK()
+  4. LEAD()
+  5. LAG()
+  6. FIRST_VALUE()
+  7. LAST_VALUE()
+  8. NTILE()
+
+================================================================================
+1. ROW_NUMBER()
+================================================================================
+
+Definition: Assigns unique row number to each row.
+
+Syntax:
+  SELECT emp_name, salary,
+         ROW_NUMBER() OVER (ORDER BY salary DESC) AS row_num
+  FROM Employees;
+
+Output:
++----------+--------+---------+
+| emp_name | salary | row_num |
++----------+--------+---------+
+| Priya    | 60000  | 1       |
+| Kiran    | 50000  | 2       |
+| Meena    | 45000  | 3       |
+| Arun     | 40000  | 4       |
+| Ravi     | 30000  | 5       |
++----------+--------+---------+
+
+ROW_NUMBER() Execution (Step-by-Step):
+  Step 1: Sort rows by salary DESC -> 60000, 50000, 45000, 40000, 30000
+  Step 2: Assign numbers sequentially -> 1, 2, 3, 4, 5
+  Step 3: Return result.
+
+Diagram:
+  Rows Sorted
+       ↓
+  Assign Sequential Numbers
+       ↓
+  ROW_NUMBER()
+
+================================================================================
+2. RANK()
+================================================================================
+
+Definition: Assigns rank to rows. Duplicate values get same rank. Skipped ranks occur.
+
+Example Table (subset):
++----------+--------+
+| emp_name | salary |
++----------+--------+
+| Ravi     | 50000  |
+| Priya    | 60000  |
+| Arun     | 50000  |
++----------+--------+
+
+Query:
+  SELECT emp_name, salary,
+         RANK() OVER (ORDER BY salary DESC) AS rank_num
+  FROM Employees;
+
+Output (full table):
++----------+--------+----------+
+| emp_name | salary | rank_num |
++----------+--------+----------+
+| Priya    | 60000  | 1        |
+| Ravi     | 50000  | 2        |
+| Arun     | 50000  | 2        |
++----------+--------+----------+
+
+Next rank becomes 4 (rank 3 skipped).
+
+RANK() Diagram:
+  60000 → Rank 1
+  50000 → Rank 2
+  50000 → Rank 2
+  Next Rank → 4
+
+================================================================================
+3. DENSE_RANK()
+================================================================================
+
+Definition: Similar to RANK(), but no skipped ranks.
+
+Query:
+  SELECT emp_name, salary,
+         DENSE_RANK() OVER (ORDER BY salary DESC) AS dense_rank_num
+  FROM Employees;
+
+Output:
++----------+--------+----------------+
+| emp_name | salary | dense_rank_num |
++----------+--------+----------------+
+| Priya    | 60000  | 1              |
+| Ravi     | 50000  | 2              |
+| Arun     | 50000  | 2              |
++----------+--------+----------------+
+
+Next rank is 3 (no skipped rank).
+
+Difference Between RANK and DENSE_RANK:
++------------------------+------------------------+
+| RANK()                 | DENSE_RANK()           |
++------------------------+------------------------+
+| Skips ranks            | No skipped ranks       |
+| Example: 1,2,2,4       | Example: 1,2,2,3       |
++------------------------+------------------------+
+
+================================================================================
+4. LEAD()
+================================================================================
+
+Definition: Accesses next row value.
+
+Syntax:
+  SELECT column_name,
+         LEAD(column_name) OVER (ORDER BY column_name)
+  FROM table_name;
+
+Example:
+  SELECT emp_name, salary,
+         LEAD(salary) OVER (ORDER BY salary) AS next_salary
+  FROM Employees;
+
+Output:
++----------+--------+-------------+
+| emp_name | salary | next_salary |
++----------+--------+-------------+
+| Ravi     | 30000  | 40000       |
+| Arun     | 40000  | 45000       |
+| Meena    | 45000  | 50000       |
+| Kiran    | 50000  | 60000       |
+| Priya    | 60000  | NULL        |
++----------+--------+-------------+
+
+LEAD() Diagram:
+  Current Row → Next Row Value
+
+================================================================================
+5. LAG()
+================================================================================
+
+Definition: Accesses previous row value.
+
+Example:
+  SELECT emp_name, salary,
+         LAG(salary) OVER (ORDER BY salary) AS previous_salary
+  FROM Employees;
+
+Output:
++----------+--------+-----------------+
+| emp_name | salary | previous_salary |
++----------+--------+-----------------+
+| Ravi     | 30000  | NULL            |
+| Arun     | 40000  | 30000           |
+| Meena    | 45000  | 40000           |
+| Kiran    | 50000  | 45000           |
+| Priya    | 60000  | 50000           |
++----------+--------+-----------------+
+
+LAG() Diagram:
+  Current Row ← Previous Row Value
+
+================================================================================
+6. FIRST_VALUE()
+================================================================================
+
+Definition: Returns first value in window.
+
+Example:
+  SELECT emp_name, salary,
+         FIRST_VALUE(salary) OVER (ORDER BY salary DESC) AS highest_salary
+  FROM Employees;
+
+Output (first row's salary repeated for all rows):
++----------+--------+----------------+
+| emp_name | salary | highest_salary |
++----------+--------+----------------+
+| Priya    | 60000  | 60000          |
+| Kiran    | 50000  | 60000          |
+| Meena    | 45000  | 60000          |
+| Arun     | 40000  | 60000          |
+| Ravi     | 30000  | 60000          |
++----------+--------+----------------+
+
+================================================================================
+7. LAST_VALUE()
+================================================================================
+
+Definition: Returns last value in window (needs frame specification).
+
+Example:
+  SELECT emp_name, salary,
+         LAST_VALUE(salary) OVER (
+             ORDER BY salary
+             ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+         ) AS last_salary
+  FROM Employees;
+
+================================================================================
+8. NTILE()
+================================================================================
+
+Definition: Divides rows into groups.
+
+Example (divide into 2 groups):
+  SELECT emp_name, salary,
+         NTILE(2) OVER (ORDER BY salary DESC) AS group_num
+  FROM Employees;
+
+Output:
++----------+--------+-----------+
+| emp_name | salary | group_num |
++----------+--------+-----------+
+| Priya    | 60000  | 1         |
+| Kiran    | 50000  | 1         |
+| Meena    | 45000  | 2         |
+| Arun     | 40000  | 2         |
+| Ravi     | 30000  | 2         |
++----------+--------+-----------+
+
+================================================================================
+PARTITION BY
+================================================================================
+
+Definition: Divides rows into partitions/groups. Similar to GROUP BY but does not collapse rows.
+
+Example:
+  SELECT emp_name, department, salary,
+         AVG(salary) OVER (PARTITION BY department) AS avg_salary
+  FROM Employees;
+
+Output:
++----------+------------+--------+------------+
+| emp_name | department | salary | avg_salary |
++----------+------------+--------+------------+
+| Ravi     | HR         | 30000  | 35000      |
+| Arun     | HR         | 40000  | 35000      |
+| Priya    | IT         | 60000  | 55000      |
+| Kiran    | IT         | 50000  | 55000      |
+| Meena    | Sales      | 45000  | 45000      |
++----------+------------+--------+------------+
+
+PARTITION BY Diagram:
+  HR Group (30000, 40000) → AVG = 35000
+  IT Group (60000, 50000) → AVG = 55000
+  Sales Group (45000)      → AVG = 45000
+
+================================================================================
+WINDOW FUNCTION EXECUTION ORDER
+================================================================================
+
+Query:
+  SELECT emp_name, salary,
+         RANK() OVER (ORDER BY salary DESC)
+  FROM Employees;
+
+Execution Flow:
+  Step 1 (FROM)                 → Read Employees table
+  Step 2 (ORDER BY inside OVER())→ Sort rows
+  Step 3 (Apply Window Function) → Calculate rank
+  Step 4 (SELECT)               → Display results
+
+================================================================================
+DIFFERENCE BETWEEN GROUP BY AND WINDOW FUNCTIONS
+================================================================================
+
++----------------------------------+----------------------------------+
+| GROUP BY                         | Window Functions                 |
++----------------------------------+----------------------------------+
+| Collapses rows                   | Keeps rows                       |
+| One result per group             | One result per row               |
+| Aggregate output                 | Analytical output                |
++----------------------------------+----------------------------------+
+
+GROUP BY Example:
+  SELECT department, AVG(salary)
+  FROM Employees
+  GROUP BY department;
+
+Output (collapsed rows):
++------------+-------+
+| department | avg   |
++------------+-------+
+| HR         | 35000 |
+| IT         | 55000 |
+| Sales      | 45000 |
++------------+-------+
+
+Window Function Example (rows remain visible):
+  SELECT emp_name, department, salary,
+         AVG(salary) OVER (PARTITION BY department)
+  FROM Employees;
+
+================================================================================
+REAL-TIME USES
+================================================================================
+
+Window functions are used for:
+  1. Ranking
+  2. Top-N queries
+  3. Running totals
+  4. Comparing previous/next rows
+  5. Salary analysis
+  6. Reports and dashboards
+
+Running Total Example:
+  SELECT emp_name, salary,
+         SUM(salary) OVER (ORDER BY emp_id) AS running_total
+  FROM Employees;
+
+Output:
++----------+--------+---------------+
+| emp_name | salary | running_total |
++----------+--------+---------------+
+| Ravi     | 30000  | 30000         |
+| Priya    | 60000  | 90000         |
+| Arun     | 40000  | 130000        |
+| Kiran    | 50000  | 180000        |
+| Meena    | 45000  | 225000        |
++----------+--------+---------------+
+
+================================================================================
+ADVANTAGES AND DISADVANTAGES
+================================================================================
+
+Advantages:
+  1. Powerful analytical queries
+  2. Keeps original rows
+  3. Easier reporting
+  4. Better than complex subqueries
+
+Disadvantages:
+  1. Can be expensive on huge datasets
+  2. Complex for beginners
+
+================================================================================
+QUICK REVISION
+================================================================================
+
++--------------+-----------------------------+
+| Function     | Purpose                     |
++--------------+-----------------------------+
+| ROW_NUMBER() | Unique row numbers          |
+| RANK()       | Ranking with skips          |
+| DENSE_RANK() | Ranking without skips       |
+| LEAD()       | Next row value              |
+| LAG()        | Previous row value          |
+| FIRST_VALUE()| First value in window       |
+| LAST_VALUE() | Last value in window        |
+| NTILE()      | Divide rows into groups     |
++--------------+-----------------------------+
+
+Memory Trick:
+  ROW_NUMBER → Unique numbering
+  RANK        → Ranking with gaps
+  DENSE_RANK  → Ranking without gaps
+  LEAD        → Next row
+  LAG         → Previous row
+
+================================================================================
+INTERVIEW POINTS
+================================================================================
+
+1. Window functions do not collapse rows.
+2. OVER() clause is mandatory.
+3. PARTITION BY creates groups.
+4. ORDER BY defines calculation order.
+5. ROW_NUMBER gives unique numbers.
+6. RANK skips numbers for duplicates.
+7. DENSE_RANK avoids skipped ranks.
+8. LEAD and LAG compare rows.
+9. Widely used in analytics and reporting.
+```
+
+Save this content as `window_functions_guide.txt`. It's plain text, well‑structured, and follows the same format as your previous SQL guides.
