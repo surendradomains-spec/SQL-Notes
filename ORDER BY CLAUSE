@@ -286,5 +286,3 @@ INTERVIEW POINTS
 5. ORDER BY executes after SELECT (logically, but after SELECT in execution order? Actually ORDER BY is after SELECT in logical order but physically after SELECT in execution? The standard execution order puts ORDER BY after SELECT. But the note already shows correct order: FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY, LIMIT)
 6. ORDER BY works with GROUP BY and LIMIT.
 7. Column position can be used for sorting (e.g., ORDER BY 2).
-
-Save this content as `order_by_guide.txt`. It's plain text, well‑structured, and follows the same format as your previous SQL guides.
