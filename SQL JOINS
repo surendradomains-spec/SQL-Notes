@@ -1,0 +1,328 @@
+================================================================================
+                        SQL JOIN – COMPLETE GUIDE
+================================================================================
+
+WHAT IS JOIN IN SQL?
+-------------------
+-> A JOIN combines data from two or more tables based on a related column.
+-> It retrieves related information stored across different tables.
+
+Basic Example:
+
+Students table                  Marks table
++-------------+------+          +-------------+-------+
+| student_id  | name |          | student_id  | marks |
++-------------+------+          +-------------+-------+
+| 1           | Ravi |          | 1           | 85    |
+| 2           | Priya|          | 2           | 90    |
++-------------+------+          +-------------+-------+
+
+After JOIN:
++-------------+------+-------+
+| student_id  | name | marks |
++-------------+------+-------+
+| 1           | Ravi | 85    |
+| 2           | Priya| 90    |
++-------------+------+-------+
+
+================================================================================
+TYPES OF JOINS (6 TYPES)
+================================================================================
+
+1. INNER JOIN
+2. LEFT JOIN
+3. RIGHT JOIN
+4. FULL JOIN (FULL OUTER JOIN)
+5. CROSS JOIN
+6. SELF JOIN
+
+================================================================================
+1. INNER JOIN
+================================================================================
+
+Definition: Returns only the matching rows from both tables.
+
+Syntax:
+  SELECT *
+  FROM table1
+  INNER JOIN table2
+  ON table1.id = table2.id;
+
+Example Tables:
+
+Students                        Marks
++----+-------+                  +----+-------+
+| id | name  |                  | id | marks |
++----+-------+                  +----+-------+
+| 1  | Ravi  |                  | 1  | 85    |
+| 2  | Priya |                  | 2  | 90    |
+| 3  | Arun  |                  | 4  | 70    |
++----+-------+                  +----+-------+
+
+Query:
+  SELECT Students.id, Students.name, Marks.marks
+  FROM Students
+  INNER JOIN Marks
+  ON Students.id = Marks.id;
+
+Output:
++----+-------+-------+
+| id | name  | marks |
++----+-------+-------+
+| 1  | Ravi  | 85    |
+| 2  | Priya | 90    |
++----+-------+-------+
+
+Note: Only matching IDs (1,2) are returned. Arun (id3) and marks for id4 are excluded.
+
+INNER JOIN – Order of Execution (Logical Steps):
+  Step 1: Take first row from left table -> (1, Ravi)
+  Step 2: Search matching row in right table -> (1, 85)
+  Step 3: Condition 1=1 -> TRUE
+  Step 4: Combine and return -> (1, Ravi, 85)
+  Step 5: Repeat for all rows
+  Step 6: Rows without matches are ignored
+
+================================================================================
+2. LEFT JOIN
+================================================================================
+
+Definition: Returns all rows from the left table + matching rows from the right
+            table. If no match, right columns are NULL.
+
+Syntax:
+  SELECT *
+  FROM table1
+  LEFT JOIN table2
+  ON table1.id = table2.id;
+
+Query (using same Students & Marks tables):
+  SELECT Students.id, Students.name, Marks.marks
+  FROM Students
+  LEFT JOIN Marks
+  ON Students.id = Marks.id;
+
+Output:
++----+-------+-------+
+| id | name  | marks |
++----+-------+-------+
+| 1  | Ravi  | 85    |
+| 2  | Priya | 90    |
+| 3  | Arun  | NULL  |
++----+-------+-------+
+
+LEFT JOIN – Order of Execution:
+  Step 1: Take every row from left table (Ravi, Priya, Arun)
+  Step 2: Find matching rows in right table
+  Step 3: If match exists -> combine rows
+  Step 4: If no match -> return NULL for right table columns
+  Step 5: Return all left table rows
+
+================================================================================
+3. RIGHT JOIN
+================================================================================
+
+Definition: Returns all rows from the right table + matching rows from the left
+            table. If no match, left columns are NULL.
+
+Syntax:
+  SELECT *
+  FROM table1
+  RIGHT JOIN table2
+  ON table1.id = table2.id;
+
+Query:
+  SELECT Students.id, Students.name, Marks.marks
+  FROM Students
+  RIGHT JOIN Marks
+  ON Students.id = Marks.id;
+
+Output:
++------+-------+-------+
+| id   | name  | marks |
++------+-------+-------+
+| 1    | Ravi  | 85    |
+| 2    | Priya | 90    |
+| NULL | NULL  | 70    |
++------+-------+-------+
+
+RIGHT JOIN – Order of Execution:
+  Step 1: Take every row from right table
+  Step 2: Search matching rows in left table
+  Step 3: If match exists -> combine rows
+  Step 4: If no match -> return NULL for left table columns
+  Step 5: Return all right table rows
+
+================================================================================
+4. FULL JOIN (FULL OUTER JOIN)
+================================================================================
+
+Definition: Returns all rows from both tables. Matching rows are combined;
+            missing sides get NULL.
+
+Syntax:
+  SELECT *
+  FROM table1
+  FULL OUTER JOIN table2
+  ON table1.id = table2.id;
+
+Output (using same tables):
++------+-------+-------+
+| id   | name  | marks |
++------+-------+-------+
+| 1    | Ravi  | 85    |
+| 2    | Priya | 90    |
+| 3    | Arun  | NULL  |
+| NULL | NULL  | 70    |
++------+-------+-------+
+
+FULL JOIN – Order of Execution:
+  Step 1: Perform INNER JOIN first -> (1,Ravi,85), (2,Priya,90)
+  Step 2: Add non-matching rows from left table -> (3,Arun,NULL)
+  Step 3: Add non-matching rows from right table -> (NULL,NULL,70)
+  Step 4: Combine and return all rows
+
+================================================================================
+5. CROSS JOIN
+================================================================================
+
+Definition: Returns the Cartesian product – every combination of rows from both
+            tables. No ON clause.
+
+Syntax:
+  SELECT *
+  FROM table1
+  CROSS JOIN table2;
+
+Example:
+
+Table A         Table B
++----+          +--------+
+| id |          | letter |
++----+          +--------+
+| 1  |          | A      |
+| 2  |          | B      |
++----+          +--------+
+
+Output:
++----+--------+
+| id | letter |
++----+--------+
+| 1  | A      |
+| 1  | B      |
+| 2  | A      |
+| 2  | B      |
++----+--------+
+
+CROSS JOIN – Order of Execution:
+  Step 1: Take first row from first table (1)
+  Step 2: Combine with ALL rows from second table -> (1,A), (1,B)
+  Step 3: Take second row from first table (2)
+  Step 4: Combine with ALL rows from second table -> (2,A), (2,B)
+  Step 5: Return every possible combination
+
+================================================================================
+6. SELF JOIN
+================================================================================
+
+Definition: A table joins with itself. Used when rows within the same table are
+            related (e.g., employee–manager).
+
+Syntax:
+  SELECT *
+  FROM table1 AS alias1
+  JOIN table1 AS alias2
+  ON alias1.col = alias2.col;
+
+Example – Employee Table:
++--------+----------+------------+
+| emp_id | emp_name | manager_id |
++--------+----------+------------+
+| 1      | Ravi     | NULL       |
+| 2      | Arun     | 1          |
++--------+----------+------------+
+
+Query:
+  SELECT e.emp_name AS Employee,
+         m.emp_name AS Manager
+  FROM Employee e
+  LEFT JOIN Employee m
+  ON e.manager_id = m.emp_id;
+
+Output:
++----------+---------+
+| Employee | Manager |
++----------+---------+
+| Ravi     | NULL    |
+| Arun     | Ravi    |
++----------+---------+
+
+SELF JOIN – Order of Execution:
+  Step 1: Create two copies of the same table: e and m
+  Step 2: Take row from first copy: Arun, manager_id = 1
+  Step 3: Find matching emp_id in second copy: Ravi, emp_id = 1
+  Step 4: Condition 1 = 1 -> TRUE
+  Step 5: Combine rows: Arun -> Ravi
+
+================================================================================
+SQL QUERY EXECUTION ORDER (Logical)
+================================================================================
+
+Order  Clause      Description
+------------------------------------------------------------
+1      FROM        Identify source table(s)
+2      JOIN        Combine with other tables
+3      ON          Apply join conditions
+4      WHERE       Filter rows
+5      GROUP BY    Aggregate groups
+6      HAVING      Filter groups
+7      SELECT      Choose columns / expressions
+8      ORDER BY    Sort results
+9      LIMIT       Restrict number of rows
+
+Example Execution Walkthrough:
+
+Query:
+  SELECT name, marks
+  FROM Students
+  INNER JOIN Marks ON Students.id = Marks.id
+  WHERE marks > 80
+  ORDER BY marks DESC;
+
+Execution Flow:
+  1. FROM -> take Students table
+  2. JOIN -> combine with Marks table
+  3. ON -> match rows on id
+  4. WHERE -> keep rows where marks > 80
+  5. SELECT -> pick name and marks columns
+  6. ORDER BY -> sort by marks descending
+
+================================================================================
+QUICK REVISION TABLE
+================================================================================
+
+JOIN TYPE      | RETURNS
+---------------+------------------------------------------------
+INNER JOIN     | Only matching rows from both tables
+LEFT JOIN      | All rows from left + matched rows from right (NULL if none)
+RIGHT JOIN     | All rows from right + matched rows from left (NULL if none)
+FULL JOIN      | All rows from both tables (NULL on missing side)
+CROSS JOIN     | Every combination of rows (Cartesian product)
+SELF JOIN      | Table joined with itself (uses aliases)
+
+================================================================================
+IMPORTANT INTERVIEW POINTS
+================================================================================
+
+1. JOIN combines data from multiple tables using a related column.
+2. The ON clause defines the matching condition.
+3. INNER JOIN returns only common data.
+4. LEFT JOIN preserves all rows from the left table.
+5. RIGHT JOIN preserves all rows from the right table.
+6. FULL JOIN preserves all rows from both sides.
+7. CROSS JOIN generates a Cartesian product (use with care).
+8. SELF JOIN joins a table to itself – requires table aliases.
+9. SQL logically executes FROM and JOIN before SELECT.
+10. In LEFT JOIN, filtering on the right table in WHERE can turn it into an
+    INNER JOIN – place such filters in the ON clause if you want to keep
+    non‑matching left rows.
