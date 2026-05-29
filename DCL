@@ -1,0 +1,282 @@
+WHAT IS DCL?
+------------
+DCL stands for: Data Control Language
+
+DCL commands are used to control:
+  • Access permissions
+  • User privileges
+  • Security in database
+
+================================================================================
+PURPOSE OF DCL
+================================================================================
+
+DCL helps:
+  1. Grant permissions
+  2. Remove permissions
+  3. Secure database objects
+
+================================================================================
+MAIN DCL COMMANDS
+================================================================================
+
+There are mainly two DCL commands:
+  1. GRANT
+  2. REVOKE
+
+================================================================================
+1. GRANT COMMAND
+================================================================================
+
+Definition: GRANT gives permissions to users.
+
+Syntax:
+  GRANT privilege_name
+  ON table_name
+  TO user_name;
+
+Example 1 – Grant SELECT Permission:
+  GRANT SELECT
+  ON Employees
+  TO Ravi;
+
+Meaning: User Ravi can read Employees table.
+
+Example 2 – Grant Multiple Permissions:
+  GRANT SELECT, INSERT, UPDATE
+  ON Employees
+  TO Ravi;
+
+Meaning: Ravi can:
+  • Read data
+  • Insert data
+  • Update data
+
+GRANT Execution Flow (Step-by-Step):
+  Step 1: Admin identifies user (Ravi).
+  Step 2: Select permissions (SELECT, INSERT, UPDATE).
+  Step 3: Database stores permission.
+  Step 4: User gets access.
+
+Diagram:
+  Admin
+     ↓
+  GRANT Permission
+     ↓
+  Database Updates Access Rights
+     ↓
+  User Gets Access
+
+================================================================================
+COMMON PRIVILEGES IN GRANT
+================================================================================
+
++----------------+-------------------+
+| Privilege      | Purpose           |
++----------------+-------------------+
+| SELECT         | Read data         |
+| INSERT         | Add rows          |
+| UPDATE         | Modify rows       |
+| DELETE         | Remove rows       |
+| ALL PRIVILEGES | Full access       |
++----------------+-------------------+
+
+Grant ALL PRIVILEGES Example:
+  GRANT ALL PRIVILEGES
+  ON Employees
+  TO Ravi;
+
+Meaning: Ravi gets complete access.
+
+================================================================================
+WITH GRANT OPTION
+================================================================================
+
+Definition: Allows the user to grant permissions to others.
+
+Example:
+  GRANT SELECT
+  ON Employees
+  TO Ravi
+  WITH GRANT OPTION;
+
+Meaning: Ravi can now give SELECT permission to other users.
+
+Diagram:
+  Admin
+     ↓
+  GRANT with GRANT OPTION
+     ↓
+  Ravi
+     ↓
+  Can Grant Permissions to Others
+
+================================================================================
+2. REVOKE COMMAND
+================================================================================
+
+Definition: REVOKE removes permissions from users.
+
+Syntax:
+  REVOKE privilege_name
+  ON table_name
+  FROM user_name;
+
+Example:
+  REVOKE INSERT
+  ON Employees
+  FROM Ravi;
+
+Meaning: Ravi can no longer insert rows.
+
+REVOKE Execution Flow (Step-by-Step):
+  Step 1: Find user permissions.
+  Step 2: Remove specified privilege.
+  Step 3: Update database security.
+  Step 4: User loses access.
+
+Diagram:
+  Admin
+     ↓
+  REVOKE Permission
+     ↓
+  Database Removes Access
+     ↓
+  User Access Restricted
+
+Example – Remove All Permissions:
+  REVOKE ALL PRIVILEGES
+  ON Employees
+  FROM Ravi;
+
+================================================================================
+DIFFERENCE BETWEEN GRANT AND REVOKE
+================================================================================
+
++--------------------------+--------------------------+
+| GRANT                    | REVOKE                   |
++--------------------------+--------------------------+
+| Gives permissions        | Removes permissions      |
+| Allows access            | Restricts access         |
+| Adds privileges          | Cancels privileges       |
++--------------------------+--------------------------+
+
+================================================================================
+DCL EXECUTION ORDER (EXAMPLE)
+================================================================================
+
+Example:
+  GRANT SELECT ON Employees TO Ravi;
+  REVOKE UPDATE ON Employees FROM Ravi;
+
+Execution Flow:
+  Step 1: Grant SELECT permission.
+  Step 2: User can read data.
+  Step 3: Remove UPDATE permission.
+  Step 4: User cannot modify data.
+
+================================================================================
+REAL-TIME EXAMPLE – COMPANY DATABASE
+================================================================================
+
+HR Team needs: SELECT, UPDATE
+Interns need only: SELECT
+
+DCL controls these permissions.
+
+Database Security Diagram:
+  Users
+     ↓
+  DCL Commands
+     ↓
+  Access Control
+     ↓
+  Secure Database
+
+================================================================================
+IMPORTANT POINTS
+================================================================================
+
+1. DCL manages permissions.
+2. Mainly used by DBA (Database Administrator).
+3. Provides database security.
+4. Controls user access.
+
+================================================================================
+DIFFERENCES WITH OTHER SQL COMMANDS
+================================================================================
+
+DCL vs TCL:
++--------------------------+--------------------------+
+| DCL                      | TCL                      |
++--------------------------+--------------------------+
+| Controls permissions     | Controls transactions    |
+| GRANT, REVOKE            | COMMIT, ROLLBACK         |
++--------------------------+--------------------------+
+
+DCL vs DDL:
++--------------------------+--------------------------+
+| DCL                      | DDL                      |
++--------------------------+--------------------------+
+| Security related         | Structure related        |
+| GRANT, REVOKE            | CREATE, ALTER, DROP      |
++--------------------------+--------------------------+
+
+================================================================================
+ADVANTAGES AND DISADVANTAGES
+================================================================================
+
+Advantages:
+  1. Improves security
+  2. Controls user access
+  3. Prevents unauthorized changes
+  4. Supports multi-user systems
+
+Disadvantages:
+  1. Permission management can become complex
+  2. Wrong privileges may create security risks
+
+================================================================================
+QUICK REVISION
+================================================================================
+
++----------+-------------------+
+| Command  | Purpose           |
++----------+-------------------+
+| GRANT    | Give permission   |
+| REVOKE   | Remove permission |
++----------+-------------------+
+
+Memory Trick:
+  GRANT  → Give Access
+  REVOKE → Remove Access
+
+================================================================================
+SQL EXECUTION EXAMPLE
+================================================================================
+
+  GRANT SELECT, INSERT ON Employees TO Ravi;
+  REVOKE INSERT ON Employees FROM Ravi;
+
+Final Result:
++------------+---------+
+| Permission | Status  |
++------------+---------+
+| SELECT     | Allowed |
+| INSERT     | Removed |
++------------+---------+
+
+================================================================================
+INTERVIEW POINTS
+================================================================================
+
+1. DCL stands for Data Control Language.
+2. Used for database security.
+3. GRANT gives privileges.
+4. REVOKE removes privileges.
+5. DBA mainly uses DCL commands.
+6. WITH GRANT OPTION allows users to grant permissions further.
+7. DCL controls database access rights.
+```
+
+Save this content as `dcl_commands_guide.txt`. It's plain text, well‑structured, and follows the same format as your previous SQL guides.
