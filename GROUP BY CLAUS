@@ -1,0 +1,246 @@
+================================================================================
+                    GROUP BY CLAUSE IN SQL - COMPLETE GUIDE
+================================================================================
+
+WHAT IS GROUP BY?
+-----------------
+The GROUP BY clause is used to group rows that have the same values into summary rows.
+It is mainly used with aggregate functions like:
+  • COUNT()
+  • SUM()
+  • AVG()
+  • MAX()
+  • MIN()
+
+================================================================================
+SYNTAX OF GROUP BY
+================================================================================
+
+  SELECT column_name, aggregate_function(column_name)
+  FROM table_name
+  GROUP BY column_name;
+
+================================================================================
+EXAMPLE TABLE: EMPLOYEES
+================================================================================
+
++--------+------------+--------+
+| emp_id | department | salary |
++--------+------------+--------+
+| 1      | HR         | 30000  |
+| 2      | IT         | 50000  |
+| 3      | HR         | 35000  |
+| 4      | IT         | 60000  |
+| 5      | Sales      | 40000  |
++--------+------------+--------+
+
+================================================================================
+EXAMPLE 1 – COUNT EMPLOYEES DEPARTMENT WISE
+================================================================================
+
+Query:
+  SELECT department, COUNT(*) AS total_employees
+  FROM Employees
+  GROUP BY department;
+
+Output:
++------------+------------------+
+| department | total_employees  |
++------------+------------------+
+| HR         | 2                |
+| IT         | 2                |
+| Sales      | 1                |
++------------+------------------+
+
+GROUP BY – Order of Execution (Step-by-Step):
+  Step 1: Take all rows from table.
+  Step 2: Group rows based on same department.
+          HR    → 2 rows
+          IT    → 2 rows
+          Sales → 1 row
+  Step 3: Apply aggregate function COUNT(*).
+  Step 4: Return grouped result.
+
+================================================================================
+EXAMPLE 2 – SUM OF SALARIES
+================================================================================
+
+Query:
+  SELECT department, SUM(salary) AS total_salary
+  FROM Employees
+  GROUP BY department;
+
+Output:
++------------+--------------+
+| department | total_salary |
++------------+--------------+
+| HR         | 65000        |
+| IT         | 110000       |
+| Sales      | 40000        |
++------------+--------------+
+
+================================================================================
+IMPORTANT RULES OF GROUP BY
+================================================================================
+
+Rule 1: Columns in SELECT must be:
+        • Present in GROUP BY
+          OR
+        • Used with aggregate functions
+
+Correct Example:
+  SELECT department, COUNT(*)
+  FROM Employees
+  GROUP BY department;
+
+Wrong Example:
+  SELECT emp_id, department, COUNT(*)
+  FROM Employees
+  GROUP BY department;
+
+Why wrong? Because emp_id is neither:
+  • grouped
+  • nor aggregated
+
+================================================================================
+AGGREGATE FUNCTIONS USED WITH GROUP BY
+================================================================================
+
++----------+----------------+
+| Function | Purpose        |
++----------+----------------+
+| COUNT()  | Count rows     |
+| SUM()    | Total          |
+| AVG()    | Average        |
+| MAX()    | Highest value  |
+| MIN()    | Lowest value   |
++----------+----------------+
+
+================================================================================
+HAVING CLAUSE IN SQL
+================================================================================
+
+What is HAVING?
+  The HAVING clause is used to filter grouped data.
+  It works after GROUP BY.
+
+Difference Between WHERE and HAVING:
+
++----------------------------------+----------------------------------+
+| WHERE                            | HAVING                           |
++----------------------------------+----------------------------------+
+| Filters rows                     | Filters groups                   |
+| Used before grouping             | Used after grouping              |
+| Cannot use aggregate functions   | Can use aggregate functions      |
+| directly                         |                                  |
++----------------------------------+----------------------------------+
+
+================================================================================
+SYNTAX OF HAVING
+================================================================================
+
+  SELECT column_name, aggregate_function(column_name)
+  FROM table_name
+  GROUP BY column_name
+  HAVING condition;
+
+================================================================================
+EXAMPLE – DEPARTMENTS WITH TOTAL SALARY > 70000
+================================================================================
+
+Query:
+  SELECT department, SUM(salary) AS total_salary
+  FROM Employees
+  GROUP BY department
+  HAVING SUM(salary) > 70000;
+
+Output:
++------------+--------------+
+| department | total_salary |
++------------+--------------+
+| IT         | 110000       |
++------------+--------------+
+
+HAVING – Order of Execution (Step-by-Step):
+  Step 1: Take all rows.
+  Step 2: Group rows by department.
+  Step 3: Calculate SUM(salary):
+          HR    → 65000
+          IT    → 110000
+          Sales → 40000
+  Step 4: Apply HAVING condition: SUM(salary) > 70000
+  Step 5: Return matching groups only: IT → 110000
+
+================================================================================
+WHERE vs HAVING EXAMPLES
+================================================================================
+
+WHERE Example (filters rows before grouping):
+  SELECT department, SUM(salary)
+  FROM Employees
+  WHERE salary > 35000
+  GROUP BY department;
+
+HAVING Example (filters groups after grouping):
+  SELECT department, SUM(salary)
+  FROM Employees
+  GROUP BY department
+  HAVING SUM(salary) > 70000;
+
+================================================================================
+SQL QUERY EXECUTION ORDER (Actual)
+================================================================================
+
+Order  Clause
+--------------------------------
+1      FROM
+2      WHERE
+3      GROUP BY
+4      HAVING
+5      SELECT
+6      ORDER BY
+7      LIMIT
+
+================================================================================
+COMPLETE EXAMPLE WITH EXECUTION FLOW
+================================================================================
+
+Query:
+  SELECT department, AVG(salary) AS avg_salary
+  FROM Employees
+  WHERE salary > 30000
+  GROUP BY department
+  HAVING AVG(salary) > 45000
+  ORDER BY avg_salary DESC;
+
+Execution Flow:
+  Step 1 (FROM)      → Take Employees table
+  Step 2 (WHERE)     → Filter salary > 30000
+  Step 3 (GROUP BY)  → Group rows by department
+  Step 4 (HAVING)    → Keep groups with AVG(salary) > 45000
+  Step 5 (SELECT)    → Choose columns
+  Step 6 (ORDER BY)  → Sort descending
+
+================================================================================
+QUICK REVISION
+================================================================================
+
+GROUP BY  → Used to group rows
+HAVING    → Used to filter groups
+
+Simple Memory Trick:
+  WHERE    → Filter rows
+  GROUP BY → Make groups
+  HAVING   → Filter groups
+
+================================================================================
+INTERVIEW POINTS
+================================================================================
+
+1. GROUP BY groups similar rows.
+2. HAVING filters grouped data.
+3. WHERE works before GROUP BY.
+4. HAVING works after GROUP BY.
+5. Aggregate functions are commonly used with GROUP BY.
+6. HAVING can use aggregate functions.
+7. WHERE cannot directly filter aggregated results.
