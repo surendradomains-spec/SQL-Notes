@@ -1,0 +1,311 @@
+WHAT ARE AGGREGATE FUNCTIONS?
+-----------------------------
+Aggregate functions perform calculations on multiple rows and return a single value.
+They are commonly used with:
+  • GROUP BY
+  • HAVING
+
+================================================================================
+TYPES OF AGGREGATE FUNCTIONS
+================================================================================
+
+Main aggregate functions in SQL:
+  1. COUNT()
+  2. SUM()
+  3. AVG()
+  4. MAX()
+  5. MIN()
+
+================================================================================
+EXAMPLE TABLE: EMPLOYEES
+================================================================================
+
++--------+----------+------------+--------+
+| emp_id | emp_name | department | salary |
++--------+----------+------------+--------+
+| 1      | Ravi     | HR         | 30000  |
+| 2      | Priya    | IT         | 50000  |
+| 3      | Arun     | HR         | 35000  |
+| 4      | Kiran    | IT         | 60000  |
+| 5      | Meena    | Sales      | 40000  |
++--------+----------+------------+--------+
+
+================================================================================
+1. COUNT() FUNCTION
+================================================================================
+
+Definition: Counts the number of rows.
+
+Syntax:
+  SELECT COUNT(column_name)
+  FROM table_name;
+
+Example 1 – Count All Employees:
+  SELECT COUNT(*) AS total_employees
+  FROM Employees;
+
+Output:
++------------------+
+| total_employees  |
++------------------+
+| 5                |
++------------------+
+
+Example 2 – Count Employees Department Wise:
+  SELECT department, COUNT(*) AS total
+  FROM Employees
+  GROUP BY department;
+
+Output:
++------------+-------+
+| department | total |
++------------+-------+
+| HR         | 2     |
+| IT         | 2     |
+| Sales      | 1     |
++------------+-------+
+
+COUNT() – Order of Execution (Step-by-Step):
+  Step 1: Read all rows.
+  Step 2: Count rows one by one: 1 → 2 → 3 → 4 → 5
+  Step 3: Return total count.
+
+================================================================================
+2. SUM() FUNCTION
+================================================================================
+
+Definition: Calculates total sum of numeric column.
+
+Syntax:
+  SELECT SUM(column_name)
+  FROM table_name;
+
+Example – Total Salary:
+  SELECT SUM(salary) AS total_salary
+  FROM Employees;
+
+Output:
++--------------+
+| total_salary |
++--------------+
+| 215000       |
++--------------+
+
+Example – Department Wise Salary:
+  SELECT department, SUM(salary) AS total_salary
+  FROM Employees
+  GROUP BY department;
+
+SUM() – Order of Execution (Step-by-Step):
+  Step 1: Take salary values: 30000, 50000, 35000, 60000, 40000
+  Step 2: Add values: 30000 + 50000 + 35000 + 60000 + 40000
+  Step 3: Return total: 215000
+
+================================================================================
+3. AVG() FUNCTION
+================================================================================
+
+Definition: Calculates average value.
+
+Syntax:
+  SELECT AVG(column_name)
+  FROM table_name;
+
+Example:
+  SELECT AVG(salary) AS average_salary
+  FROM Employees;
+
+Output:
++----------------+
+| average_salary |
++----------------+
+| 43000          |
++----------------+
+
+AVG() – Order of Execution (Step-by-Step):
+  Step 1: Add all salary values: 215000
+  Step 2: Count rows: 5
+  Step 3: Divide total by count: 215000 / 5 = 43000
+  Step 4: Return average.
+
+================================================================================
+4. MAX() FUNCTION
+================================================================================
+
+Definition: Returns highest value.
+
+Syntax:
+  SELECT MAX(column_name)
+  FROM table_name;
+
+Example:
+  SELECT MAX(salary) AS highest_salary
+  FROM Employees;
+
+Output:
++----------------+
+| highest_salary |
++----------------+
+| 60000          |
++----------------+
+
+MAX() – Order of Execution (Step-by-Step):
+  Step 1: Take first value as maximum: 30000
+  Step 2: Compare with next values: 50000 > 30000, update to 50000
+  Step 3: Continue: 35000 < 50000, no change; 60000 > 50000, update to 60000
+  Step 4: Return highest value: 60000
+
+================================================================================
+5. MIN() FUNCTION
+================================================================================
+
+Definition: Returns smallest value.
+
+Syntax:
+  SELECT MIN(column_name)
+  FROM table_name;
+
+Example:
+  SELECT MIN(salary) AS lowest_salary
+  FROM Employees;
+
+Output:
++---------------+
+| lowest_salary |
++---------------+
+| 30000         |
++---------------+
+
+MIN() – Order of Execution (Step-by-Step):
+  Step 1: Take first value as minimum: 30000
+  Step 2: Compare remaining values; update if smaller found
+  Step 3: Return smallest value: 30000
+
+================================================================================
+AGGREGATE FUNCTIONS WITH GROUP BY (Complete Example)
+================================================================================
+
+Query:
+  SELECT department,
+         COUNT(*) AS total_employees,
+         SUM(salary) AS total_salary,
+         AVG(salary) AS average_salary,
+         MAX(salary) AS highest_salary,
+         MIN(salary) AS lowest_salary
+  FROM Employees
+  GROUP BY department;
+
+Output:
++------------+------------------+--------------+----------------+----------------+---------------+
+| department | total_employees | total_salary | average_salary | highest_salary | lowest_salary |
++------------+------------------+--------------+----------------+----------------+---------------+
+| HR         | 2                | 65000        | 32500          | 35000          | 30000         |
+| IT         | 2                | 110000       | 55000          | 60000          | 50000         |
+| Sales      | 1                | 40000        | 40000          | 40000          | 40000         |
++------------+------------------+--------------+----------------+----------------+---------------+
+
+================================================================================
+AGGREGATE FUNCTIONS WITH HAVING
+================================================================================
+
+Example – Departments with Total Salary > 70000:
+  SELECT department, SUM(salary) AS total_salary
+  FROM Employees
+  GROUP BY department
+  HAVING SUM(salary) > 70000;
+
+Output:
++------------+--------------+
+| department | total_salary |
++------------+--------------+
+| IT         | 110000       |
++------------+--------------+
+
+================================================================================
+IMPORTANT RULES
+================================================================================
+
+Rule 1: Aggregate functions work on multiple rows.
+Rule 2: They return a single value.
+Rule 3: Mostly used with GROUP BY.
+Rule 4: HAVING is used to filter aggregate results.
+
+================================================================================
+DIFFERENCE BETWEEN WHERE AND HAVING
+================================================================================
+
++----------------------------------+----------------------------------+
+| WHERE                            | HAVING                           |
++----------------------------------+----------------------------------+
+| Filters rows                     | Filters groups                   |
+| Before GROUP BY                  | After GROUP BY                   |
+| Cannot use aggregate functions   | Can use aggregate functions      |
+| directly                         |                                  |
++----------------------------------+----------------------------------+
+
+================================================================================
+SQL QUERY EXECUTION ORDER
+================================================================================
+
+Order  Clause
+--------------------------------
+1      FROM
+2      WHERE
+3      GROUP BY
+4      HAVING
+5      SELECT
+6      ORDER BY
+
+================================================================================
+COMPLETE EXAMPLE WITH EXECUTION FLOW
+================================================================================
+
+Query:
+  SELECT department, AVG(salary) AS avg_salary
+  FROM Employees
+  WHERE salary > 30000
+  GROUP BY department
+  HAVING AVG(salary) > 45000
+  ORDER BY avg_salary DESC;
+
+Execution Flow:
+  Step 1 (FROM)      → Read Employees table
+  Step 2 (WHERE)     → Filter salary > 30000
+  Step 3 (GROUP BY)  → Create department groups
+  Step 4 (HAVING)    → Filter groups with AVG > 45000
+  Step 5 (SELECT)    → Display required columns
+  Step 6 (ORDER BY)  → Sort result descending
+
+================================================================================
+QUICK REVISION
+================================================================================
+
++----------+----------------+
+| Function | Purpose        |
++----------+----------------+
+| COUNT()  | Count rows     |
+| SUM()    | Total sum      |
+| AVG()    | Average        |
+| MAX()    | Highest value  |
+| MIN()    | Lowest value   |
++----------+----------------+
+
+Memory Trick:
+  COUNT → How many
+  SUM   → Total
+  AVG   → Average
+  MAX   → Highest
+  MIN   → Lowest
+
+================================================================================
+INTERVIEW POINTS
+================================================================================
+
+1. Aggregate functions operate on multiple rows.
+2. They return one result.
+3. Frequently used with GROUP BY.
+4. HAVING filters aggregate results.
+5. COUNT(*) counts all rows (including NULLs).
+6. COUNT(column) counts non-NULL values only.
+7. AVG internally uses SUM / COUNT.
+8. MAX and MIN work for numbers, dates, and strings.
