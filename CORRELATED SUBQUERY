@@ -306,7 +306,3 @@ INTERVIEW POINTS
 5. Slower than normal subqueries.
 6. JOIN can sometimes replace correlated subqueries.
 7. Cannot execute independently.
-
-================================================================================
-END OF GUIDE
-================================================================================
