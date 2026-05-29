@@ -1,0 +1,296 @@
+WHAT IS TCL?
+------------
+TCL stands for: Transaction Control Language
+
+TCL commands are used to manage transactions in a database.
+They help control:
+  • Saving changes
+  • Undoing changes
+  • Creating checkpoints
+
+================================================================================
+WHAT IS A TRANSACTION?
+================================================================================
+
+A Transaction is a group of SQL statements executed together as one unit.
+
+Example:
+  UPDATE Accounts SET balance = balance - 500 WHERE acc_no = 101;
+  UPDATE Accounts SET balance = balance + 500 WHERE acc_no = 102;
+
+Both queries together form one transaction.
+
+================================================================================
+TCL COMMANDS
+================================================================================
+
+Main TCL commands:
+  1. COMMIT
+  2. ROLLBACK
+  3. SAVEPOINT
+  4. SET TRANSACTION
+
+================================================================================
+1. COMMIT
+================================================================================
+
+Definition: COMMIT permanently saves changes in the database.
+
+Syntax:
+  COMMIT;
+
+Example:
+  UPDATE Employees SET salary = 50000 WHERE emp_id = 1;
+  COMMIT;
+
+Execution Flow:
+  Step 1: Transaction starts
+  Step 2: Data gets modified (salary updated)
+  Step 3: COMMIT saves changes permanently
+
+Diagram:
+  Start Transaction
+        ↓
+  Modify Data
+        ↓
+  COMMIT
+        ↓
+  Changes Saved Permanently
+
+Important: After COMMIT, changes cannot be undone.
+
+================================================================================
+2. ROLLBACK
+================================================================================
+
+Definition: ROLLBACK cancels changes and restores previous state.
+
+Syntax:
+  ROLLBACK;
+
+Example:
+  UPDATE Employees SET salary = 70000 WHERE emp_id = 2;
+  ROLLBACK;
+
+Execution Flow:
+  Step 1: Transaction starts
+  Step 2: Data changes temporarily
+  Step 3: ROLLBACK removes changes
+
+Diagram:
+  Start Transaction
+        ↓
+  Modify Data
+        ↓
+  ROLLBACK
+        ↓
+  Changes Removed
+
+Important: ROLLBACK works only before COMMIT.
+
+Example with COMMIT and ROLLBACK:
+  UPDATE Accounts SET balance = balance - 1000 WHERE acc_no = 101;
+  UPDATE Accounts SET balance = balance + 1000 WHERE acc_no = 102;
+  ROLLBACK;
+
+Result: Money transfer cancelled. No changes saved.
+
+================================================================================
+3. SAVEPOINT
+================================================================================
+
+Definition: SAVEPOINT creates checkpoints inside a transaction.
+
+Syntax:
+  SAVEPOINT savepoint_name;
+
+Example:
+  UPDATE Employees SET salary = salary + 5000 WHERE emp_id = 1;
+  SAVEPOINT sp1;
+  UPDATE Employees SET salary = salary + 3000 WHERE emp_id = 2;
+
+Rollback to SAVEPOINT:
+  ROLLBACK TO sp1;
+
+Meaning: Undo changes after savepoint only.
+
+Diagram:
+  Transaction Start
+        ↓
+  Update 1
+        ↓
+  SAVEPOINT sp1
+        ↓
+  Update 2
+        ↓
+  ROLLBACK TO sp1
+        ↓
+  Update 2 Cancelled
+
+================================================================================
+4. SET TRANSACTION
+================================================================================
+
+Definition: Controls transaction properties.
+
+Example:
+  SET TRANSACTION READ ONLY;
+
+================================================================================
+TCL EXECUTION ORDER (EXAMPLE)
+================================================================================
+
+Example:
+  UPDATE Employees SET salary = 60000 WHERE emp_id = 1;
+  SAVEPOINT sp1;
+  DELETE FROM Employees WHERE emp_id = 5;
+  ROLLBACK TO sp1;
+  COMMIT;
+
+Step-by-Step:
+  Step 1: Update salary.
+  Step 2: Create savepoint.
+  Step 3: Delete employee.
+  Step 4: ROLLBACK TO sp1 -> Delete operation cancelled.
+  Step 5: COMMIT remaining changes.
+
+================================================================================
+TRANSACTION STATES
+================================================================================
+
++----------------------+-----------------------------+
+| State                | Meaning                     |
++----------------------+-----------------------------+
+| Active               | Transaction running         |
+| Partially Committed  | Waiting for commit          |
+| Committed            | Changes saved               |
+| Failed               | Error occurred              |
+| Aborted              | Rolled back                 |
++----------------------+-----------------------------+
+
+================================================================================
+ACID PROPERTIES
+================================================================================
+
+Transactions follow ACID properties.
+
+A → Atomicity:
+  All operations succeed or none.
+
+C → Consistency:
+  Database remains valid.
+
+I → Isolation:
+  Transactions do not interfere.
+
+D → Durability:
+  Committed changes stay permanently.
+
+ACID Diagram:
+  Transaction
+       ↓
+  ACID Rules
+       ↓
+  Reliable Database Operations
+
+================================================================================
+AUTO COMMIT
+================================================================================
+
+Many databases use:
+  AUTO COMMIT = ON
+Each query commits automatically.
+
+Disable Auto Commit:
+  SET AUTOCOMMIT = 0;
+
+================================================================================
+DIFFERENCE BETWEEN COMMIT AND ROLLBACK
+================================================================================
+
++--------------------------+--------------------------+
+| COMMIT                   | ROLLBACK                 |
++--------------------------+--------------------------+
+| Saves changes            | Cancels changes          |
+| Permanent                | Temporary undo           |
+| Cannot undo after commit | Restores previous state  |
++--------------------------+--------------------------+
+
+================================================================================
+DIFFERENCE BETWEEN DDL AND TCL
+================================================================================
+
++--------------------------+--------------------------+
+| DDL                      | TCL                      |
++--------------------------+--------------------------+
+| Structure changes        | Transaction management   |
+| CREATE, ALTER, DROP      | COMMIT, ROLLBACK         |
++--------------------------+--------------------------+
+
+================================================================================
+REAL-TIME EXAMPLE – BANKING SYSTEM
+================================================================================
+
+Transaction:
+  Withdraw money
+  Deposit money
+
+Both must complete together. If failure occurs:
+  ROLLBACK
+
+SQL Transaction Flow Diagram:
+  Start Transaction
+        ↓
+  Execute Queries
+        ↓
+  Error?
+     ↓         ↓
+   YES         NO
+     ↓         ↓
+  ROLLBACK   COMMIT
+
+================================================================================
+ADVANTAGES OF TCL
+================================================================================
+
+1. Data safety
+2. Error recovery
+3. Maintains consistency
+4. Supports multi-user systems
+
+================================================================================
+DISADVANTAGES
+================================================================================
+
+1. Locks may slow performance
+2. Long transactions consume resources
+
+================================================================================
+QUICK REVISION
+================================================================================
+
++----------------+--------------------------------+
+| Command        | Purpose                        |
++----------------+--------------------------------+
+| COMMIT         | Save changes                   |
+| ROLLBACK       | Undo changes                   |
+| SAVEPOINT      | Create checkpoint              |
+| SET TRANSACTION| Set transaction behavior       |
++----------------+--------------------------------+
+
+Memory Trick:
+  COMMIT    → Save
+  ROLLBACK  → Undo
+  SAVEPOINT → Checkpoint
+
+================================================================================
+INTERVIEW POINTS
+================================================================================
+
+1. TCL manages transactions.
+2. COMMIT permanently saves changes.
+3. ROLLBACK undoes changes.
+4. SAVEPOINT creates checkpoints.
+5. Transactions follow ACID properties.
+6. COMMIT cannot be undone.
+7. TCL ensures data consistency.
