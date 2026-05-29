@@ -1,0 +1,344 @@
+WHAT IS NULL IN SQL?
+--------------------
+NULL means:
+  • Missing value
+  • Unknown value
+  • Empty value
+
+It does NOT mean:
+  • 0
+  • Blank space
+  • False
+
+================================================================================
+EXAMPLE TABLE: EMPLOYEES
+================================================================================
+
++--------+----------+--------+-------+
+| emp_id | emp_name | salary | bonus |
++--------+----------+--------+-------+
+| 1      | Ravi     | 30000  | 2000  |
+| 2      | Priya    | 60000  | NULL  |
+| 3      | Arun     | 40000  | 1000  |
+| 4      | Kiran    | 50000  | NULL  |
++--------+----------+--------+-------+
+
+================================================================================
+WHY NULL FUNCTIONS ARE NEEDED?
+================================================================================
+
+When calculations involve NULL, the result may become NULL.
+
+Example:
+  SELECT salary + bonus FROM Employees;
+If bonus is NULL, result becomes NULL.
+
+================================================================================
+MAIN NULL FUNCTIONS IN SQL
+================================================================================
+
+1. IS NULL
+2. IS NOT NULL
+3. IFNULL()
+4. COALESCE()
+5. NULLIF()
+6. NVL() (Oracle)
+
+================================================================================
+1. IS NULL
+================================================================================
+
+Definition: Checks whether a value is NULL.
+
+Syntax:
+  SELECT column_name FROM table_name
+  WHERE column_name IS NULL;
+
+Example:
+  SELECT emp_name FROM Employees WHERE bonus IS NULL;
+
+Output:
++----------+
+| emp_name |
++----------+
+| Priya    |
+| Kiran    |
++----------+
+
+Execution Flow:
+  Step 1: Read rows.
+  Step 2: Check bonus column.
+  Step 3: Find NULL values.
+  Step 4: Return matching rows.
+
+Diagram:
+  Read Rows
+      ↓
+  Check NULL Values
+      ↓
+  TRUE?
+      ↓
+  Return Rows
+
+Important: Wrong way: WHERE bonus = NULL
+          Correct way: WHERE bonus IS NULL
+
+================================================================================
+2. IS NOT NULL
+================================================================================
+
+Definition: Checks values that are NOT NULL.
+
+Syntax:
+  SELECT column_name FROM table_name
+  WHERE column_name IS NOT NULL;
+
+Example:
+  SELECT emp_name FROM Employees WHERE bonus IS NOT NULL;
+
+Output:
++----------+
+| emp_name |
++----------+
+| Ravi     |
+| Arun     |
++----------+
+
+Diagram:
+  Read Rows
+      ↓
+  Check NOT NULL
+      ↓
+  Return Valid Values
+
+================================================================================
+3. IFNULL()
+================================================================================
+
+Definition: Replaces NULL with a specified value.
+
+Syntax:
+  IFNULL(column_name, replacement_value)
+
+Example:
+  SELECT emp_name, IFNULL(bonus, 0) AS bonus FROM Employees;
+
+Output:
++----------+-------+
+| emp_name | bonus |
++----------+-------+
+| Ravi     | 2000  |
+| Priya    | 0     |
+| Arun     | 1000  |
+| Kiran    | 0     |
++----------+-------+
+
+Execution:
+  Step 1: Check bonus value.
+  Step 2: If NULL → replace with 0.
+  Step 3: Return final result.
+
+Diagram:
+  NULL Value
+      ↓
+  IFNULL()
+      ↓
+  Replacement Value
+
+================================================================================
+4. COALESCE()
+================================================================================
+
+Definition: Returns the first non-NULL value from a list.
+
+Syntax:
+  COALESCE(value1, value2, value3, ...)
+
+Example:
+  SELECT emp_name, COALESCE(bonus, salary, 0) FROM Employees;
+
+Meaning: Take first non-NULL value.
+
+Example Result:
++----------+-------+
+| emp_name | value |
++----------+-------+
+| Ravi     | 2000  |
+| Priya    | 60000 |
+| Arun     | 1000  |
+| Kiran    | 50000 |
++----------+-------+
+
+COALESCE Execution (Step-by-Step):
+  Step 1: Check first value.
+  Step 2: If NULL → check next value.
+  Step 3: Return first non-NULL value.
+
+Diagram:
+  Value 1 NULL?
+        ↓
+  YES → Check Value 2
+        ↓
+  First Non-NULL Returned
+
+================================================================================
+5. NULLIF()
+================================================================================
+
+Definition: Returns NULL if the two expressions are equal.
+
+Syntax:
+  NULLIF(expression1, expression2)
+
+Example:
+  SELECT NULLIF(100, 100);
+Output: NULL
+
+Another Example:
+  SELECT NULLIF(100, 200);
+Output: 100
+
+Diagram:
+  Values Equal?
+     ↓
+  YES → NULL
+  NO  → First Value
+
+================================================================================
+6. NVL() (Oracle)
+================================================================================
+
+Definition: Oracle function to replace NULL values.
+
+Syntax:
+  NVL(column_name, replacement_value)
+
+Example:
+  SELECT emp_name, NVL(bonus, 0) FROM Employees;
+
+NVL vs IFNULL:
++--------------------------+--------------------------+
+| NVL                      | IFNULL                   |
++--------------------------+--------------------------+
+| Oracle                   | MySQL                    |
+| Same purpose             | Same purpose             |
++--------------------------+--------------------------+
+
+================================================================================
+NULL IN CALCULATIONS
+================================================================================
+
+Example:
+  SELECT salary + bonus FROM Employees;
+If bonus is NULL, result becomes NULL.
+
+Solution:
+  SELECT salary + IFNULL(bonus, 0) FROM Employees;
+
+================================================================================
+NULL WITH AGGREGATE FUNCTIONS
+================================================================================
+
+Aggregate functions usually ignore NULL values.
+
+Example:
+  SELECT AVG(bonus) FROM Employees;
+NULL values are ignored.
+
+COUNT() Example:
+  SELECT COUNT(bonus) FROM Employees;
+Counts only non-NULL values.
+
+================================================================================
+SQL EXECUTION ORDER (EXAMPLE)
+================================================================================
+
+Query:
+  SELECT emp_name, IFNULL(bonus, 0)
+  FROM Employees
+  WHERE bonus IS NULL;
+
+Execution Flow:
+  Step 1 (FROM)   → Read table.
+  Step 2 (WHERE)  → Find NULL rows.
+  Step 3 (SELECT) → Apply IFNULL().
+  Step 4          → Return output.
+
+================================================================================
+DIFFERENCE BETWEEN NULL AND 0
+================================================================================
+
++--------------------------+--------------------------+
+| NULL                     | 0                        |
++--------------------------+--------------------------+
+| Unknown value            | Numeric value            |
+| No data                  | Actual value             |
++--------------------------+--------------------------+
+
+================================================================================
+DIFFERENCE BETWEEN IS NULL AND IFNULL()
+================================================================================
+
++--------------------------+--------------------------+
+| IS NULL                  | IFNULL()                 |
++--------------------------+--------------------------+
+| Checks NULL              | Replaces NULL            |
+| Used in WHERE            | Used in SELECT           |
++--------------------------+--------------------------+
+
+================================================================================
+REAL-TIME USES
+================================================================================
+
+NULL functions are used for:
+  1. Missing salary handling
+  2. Empty phone numbers
+  3. Default values
+  4. Report generation
+  5. Safe calculations
+
+================================================================================
+ADVANTAGES AND DISADVANTAGES
+================================================================================
+
+Advantages:
+  1. Handles missing data
+  2. Prevents calculation errors
+  3. Improves reports
+  4. Better data cleaning
+
+Disadvantages:
+  1. Excessive NULL handling increases query complexity
+
+================================================================================
+QUICK REVISION
+================================================================================
+
++-------------+-----------------------------------+
+| Function    | Purpose                           |
++-------------+-----------------------------------+
+| IS NULL     | Check NULL                        |
+| IS NOT NULL | Check non-NULL                    |
+| IFNULL()    | Replace NULL                      |
+| COALESCE()  | First non-NULL                    |
+| NULLIF()    | Return NULL if equal              |
+| NVL()       | Oracle NULL replacement           |
++-------------+-----------------------------------+
+
+Memory Trick:
+  IS NULL     → Check NULL
+  IFNULL      → Replace NULL
+  COALESCE    → First valid value
+  NULLIF      → Compare values
+
+================================================================================
+INTERVIEW POINTS
+================================================================================
+
+1. NULL means unknown or missing value.
+2. NULL is not equal to 0.
+3. Use IS NULL instead of = NULL.
+4. IFNULL replaces NULL values.
+5. COALESCE returns first non-NULL value.
+6. Aggregate functions ignore NULL values.
+7. COUNT(column) ignores NULL values.
