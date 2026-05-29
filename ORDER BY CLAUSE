@@ -1,0 +1,290 @@
+WHAT IS ORDER BY?
+-----------------
+The ORDER BY clause is used to sort data in SQL.
+It arranges rows:
+  • Ascending order
+  • Descending order
+
+Simple Definition:
+  ORDER BY is used to sort query results.
+
+================================================================================
+SYNTAX
+================================================================================
+
+  SELECT column_name
+  FROM table_name
+  ORDER BY column_name;
+
+Default Sorting: ORDER BY sorts data in ASCENDING order.
+
+================================================================================
+EXAMPLE TABLE: EMPLOYEES
+================================================================================
+
++--------+----------+--------+
+| emp_id | emp_name | salary |
++--------+----------+--------+
+| 1      | Ravi     | 30000  |
+| 2      | Priya    | 60000  |
+| 3      | Arun     | 40000  |
+| 4      | Kiran    | 50000  |
++--------+----------+--------+
+
+================================================================================
+1. ORDER BY ASC
+================================================================================
+
+Definition: Sorts data from Small → Large (or A → Z).
+
+Query:
+  SELECT emp_name, salary
+  FROM Employees
+  ORDER BY salary ASC;
+
+Output:
++----------+--------+
+| emp_name | salary |
++----------+--------+
+| Ravi     | 30000  |
+| Arun     | 40000  |
+| Kiran    | 50000  |
+| Priya    | 60000  |
++----------+--------+
+
+ORDER BY ASC Execution (Step-by-Step):
+  Step 1: Read rows from table.
+  Step 2: Take sorting column (salary).
+  Step 3: Compare values: 30000, 40000, 50000, 60000.
+  Step 4: Arrange from smallest to largest.
+  Step 5: Return sorted result.
+
+Diagram:
+  Read Rows
+      ↓
+  Pick Sorting Column
+      ↓
+  Compare Values
+      ↓
+  Arrange ASC
+      ↓
+  Display Result
+
+================================================================================
+2. ORDER BY DESC
+================================================================================
+
+Definition: Sorts data from Large → Small (or Z → A).
+
+Query:
+  SELECT emp_name, salary
+  FROM Employees
+  ORDER BY salary DESC;
+
+Output:
++----------+--------+
+| emp_name | salary |
++----------+--------+
+| Priya    | 60000  |
+| Kiran    | 50000  |
+| Arun     | 40000  |
+| Ravi     | 30000  |
++----------+--------+
+
+ORDER BY DESC Execution (Step-by-Step):
+  Step 1: Take salary column.
+  Step 2: Compare values.
+  Step 3: Arrange largest to smallest: 60000, 50000, 40000, 30000.
+  Step 4: Return result.
+
+================================================================================
+ORDER BY WITH STRINGS
+================================================================================
+
+Example (ASC):
+  SELECT emp_name FROM Employees ORDER BY emp_name ASC;
+
+Output: Arun, Kiran, Priya, Ravi (A → Z)
+
+Example (DESC):
+  SELECT emp_name FROM Employees ORDER BY emp_name DESC;
+
+Output: Ravi, Priya, Kiran, Arun (Z → A)
+
+================================================================================
+ORDER BY MULTIPLE COLUMNS
+================================================================================
+
+Definition: Sort using more than one column.
+
+Syntax:
+  SELECT column_name FROM table_name ORDER BY column1, column2;
+
+Example – Sort by department ASC, then salary DESC:
+  SELECT emp_name, department, salary
+  FROM Employees
+  ORDER BY department ASC, salary DESC;
+
+Execution Flow:
+  Step 1: Sort by department (ASC).
+  Step 2: Within same department, sort by salary (DESC).
+
+Example Output:
++----------+------------+--------+
+| emp_name | department | salary |
++----------+------------+--------+
+| Arun     | HR         | 40000  |
+| Ravi     | HR         | 30000  |
+| Priya    | IT         | 60000  |
+| Kiran    | IT         | 50000  |
++----------+------------+--------+
+
+================================================================================
+ORDER BY USING COLUMN POSITION
+================================================================================
+
+Example:
+  SELECT emp_name, salary FROM Employees ORDER BY 2 DESC;
+
+Meaning: 2 refers to the second selected column (salary). So sorting on salary.
+
+================================================================================
+ORDER BY WITH WHERE
+================================================================================
+
+Example:
+  SELECT emp_name, salary
+  FROM Employees
+  WHERE salary > 35000
+  ORDER BY salary DESC;
+
+Execution Order:
+  Step 1 (FROM)   → Read table
+  Step 2 (WHERE)  → Filter rows (keep salary > 35000)
+  Step 3 (ORDER BY)→ Sort remaining rows
+  Step 4 (SELECT) → Display output
+
+================================================================================
+ORDER BY WITH GROUP BY
+================================================================================
+
+Example:
+  SELECT department, AVG(salary) AS avg_salary
+  FROM Employees
+  GROUP BY department
+  ORDER BY avg_salary DESC;
+
+Execution Flow:
+  Step 1: Read rows
+  Step 2: Group rows by department
+  Step 3: Calculate AVG(salary)
+  Step 4: Sort grouped results by avg_salary DESC
+
+================================================================================
+ORDER BY WITH LIMIT
+================================================================================
+
+Example – Find top 3 highest salaries:
+  SELECT emp_name, salary
+  FROM Employees
+  ORDER BY salary DESC
+  LIMIT 3;
+
+Execution Order:
+  Step 1: Sort all rows by salary DESC
+  Step 2: Take first 3 rows
+
+================================================================================
+NULL VALUES IN ORDER BY
+================================================================================
+
+Different databases handle NULL differently. Generally:
+  ASC  → NULL values appear first
+  DESC → NULL values appear last
+
+================================================================================
+SQL QUERY EXECUTION ORDER (Actual)
+================================================================================
+
++-------+-----------+
+| Order | Clause    |
++-------+-----------+
+| 1     | FROM      |
+| 2     | WHERE     |
+| 3     | GROUP BY  |
+| 4     | HAVING    |
+| 5     | SELECT    |
+| 6     | ORDER BY  |
+| 7     | LIMIT     |
++-------+-----------+
+
+ORDER BY Diagram:
+  Read Data
+      ↓
+  Apply Filters (WHERE, GROUP BY, HAVING)
+      ↓
+  Sort Data (ORDER BY)
+      ↓
+  Display Result (SELECT, LIMIT)
+
+================================================================================
+DIFFERENCE BETWEEN GROUP BY AND ORDER BY
+================================================================================
+
++--------------------------+--------------------------+
+| GROUP BY                 | ORDER BY                 |
++--------------------------+--------------------------+
+| Creates groups           | Sorts rows               |
+| Used with aggregates     | Used for sorting         |
+| Does not sort automatically | Main purpose is sorting |
++--------------------------+--------------------------+
+
+================================================================================
+REAL-TIME USES
+================================================================================
+
+ORDER BY is used for:
+  1. Highest salary
+  2. Lowest marks
+  3. Alphabetical sorting
+  4. Latest dates
+  5. Ranking reports
+
+================================================================================
+ADVANTAGES
+================================================================================
+
+1. Easy data sorting
+2. Better readability
+3. Useful for reports
+4. Works with multiple columns
+
+================================================================================
+QUICK REVISION
+================================================================================
+
++----------+-------------+
+| Keyword  | Meaning     |
++----------+-------------+
+| ASC      | Ascending   |
+| DESC     | Descending  |
+| ORDER BY | Sort rows   |
++----------+-------------+
+
+Memory Trick:
+  ASC  → A to Z (small to large)
+  DESC → Z to A (large to small)
+
+================================================================================
+INTERVIEW POINTS
+================================================================================
+
+1. ORDER BY sorts query output.
+2. Default sorting is ASC.
+3. DESC gives descending order.
+4. Multiple columns can be sorted.
+5. ORDER BY executes after SELECT (logically, but after SELECT in execution order? Actually ORDER BY is after SELECT in logical order but physically after SELECT in execution? The standard execution order puts ORDER BY after SELECT. But the note already shows correct order: FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY, LIMIT)
+6. ORDER BY works with GROUP BY and LIMIT.
+7. Column position can be used for sorting (e.g., ORDER BY 2).
+
+Save this content as `order_by_guide.txt`. It's plain text, well‑structured, and follows the same format as your previous SQL guides.
