@@ -1,0 +1,325 @@
+WHAT IS A SUBQUERY?
+-------------------
+A Subquery is a query written inside another query.
+It is also called:
+  Inner Query
+  Nested Query
+
+================================================================================
+WHAT IS A NESTED SUBQUERY?
+================================================================================
+
+A Nested Subquery means:
+  One query inside another query
+
+The inner query executes first, and its result is used by the outer query.
+
+================================================================================
+SIMPLE STRUCTURE
+================================================================================
+
+  SELECT column_name
+  FROM table_name
+  WHERE column_name operator
+  (
+      SELECT column_name
+      FROM table_name
+  );
+
+Important Point: Nested subqueries are independent subqueries.
+The inner query can run separately.
+
+================================================================================
+EXAMPLE TABLE: EMPLOYEES
+================================================================================
+
++--------+----------+------------+--------+
+| emp_id | emp_name | department | salary |
++--------+----------+------------+--------+
+| 1      | Ravi     | HR         | 30000  |
+| 2      | Priya    | IT         | 60000  |
+| 3      | Arun     | HR         | 40000  |
+| 4      | Kiran    | IT         | 50000  |
+| 5      | Meena    | Sales      | 45000  |
++--------+----------+------------+--------+
+
+================================================================================
+EXAMPLE 1 — EMPLOYEES WITH HIGHEST SALARY
+================================================================================
+
+Query:
+  SELECT emp_name, salary
+  FROM Employees
+  WHERE salary =
+  (
+      SELECT MAX(salary)
+      FROM Employees
+  );
+
+Output:
++----------+--------+
+| emp_name | salary |
++----------+--------+
+| Priya    | 60000  |
++----------+--------+
+
+Execution Order (Step-by-Step):
+  Step 1: Inner query executes first:
+          SELECT MAX(salary) FROM Employees; -> Result: 60000
+
+  Step 2: Outer query becomes:
+          SELECT emp_name, salary FROM Employees WHERE salary = 60000;
+
+  Step 3: Matching rows are returned.
+
+Diagram:
+  Inner Query Executes (MAX=60000)
+           ↓
+  Result Produced
+           ↓
+  Outer Query Uses Result (salary = 60000)
+           ↓
+  Final Output (Priya, 60000)
+
+================================================================================
+EXAMPLE 2 — EMPLOYEES EARNING ABOVE AVERAGE SALARY
+================================================================================
+
+Query:
+  SELECT emp_name, salary
+  FROM Employees
+  WHERE salary >
+  (
+      SELECT AVG(salary)
+      FROM Employees
+  );
+
+Step-by-Step:
+  Step 1: Inner query: SELECT AVG(salary) FROM Employees; -> 45000
+
+  Step 2: Outer query becomes:
+          SELECT emp_name, salary FROM Employees WHERE salary > 45000;
+
+  Step 3: Rows returned:
+          +----------+--------+
+          | emp_name | salary |
+          +----------+--------+
+          | Priya    | 60000  |
+          | Kiran    | 50000  |
+          +----------+--------+
+
+================================================================================
+TYPES OF NESTED SUBQUERIES
+================================================================================
+
+1. Single Row Subquery
+2. Multiple Row Subquery
+3. Multiple Column Subquery
+4. Nested Subquery inside another Nested Subquery
+
+================================================================================
+1. SINGLE ROW SUBQUERY
+================================================================================
+
+Returns only one value.
+
+Example:
+  SELECT emp_name FROM Employees
+  WHERE salary = (SELECT MAX(salary) FROM Employees);
+
+Returns one value: 60000
+
+Operators used: =, >, <, >=, <=
+
+================================================================================
+2. MULTIPLE ROW SUBQUERY
+================================================================================
+
+Returns multiple rows.
+
+Example – Find employees from departments located in Bangalore:
+
+Departments Table:
++---------+-----------+
+| dept_id | city      |
++---------+-----------+
+| 1       | Bangalore |
+| 2       | Chennai   |
++---------+-----------+
+
+Query:
+  SELECT emp_name
+  FROM Employees
+  WHERE department IN
+  (
+      SELECT dept_id
+      FROM Departments
+      WHERE city = 'Bangalore'
+  );
+
+Important Operators: IN, ANY, ALL
+
+================================================================================
+3. MULTIPLE COLUMN SUBQUERY
+================================================================================
+
+Returns multiple columns.
+
+Example – Highest salary employee in each department:
+  SELECT *
+  FROM Employees
+  WHERE (department, salary) IN
+  (
+      SELECT department, MAX(salary)
+      FROM Employees
+      GROUP BY department
+  );
+
+================================================================================
+4. NESTED SUBQUERY INSIDE ANOTHER SUBQUERY (Multi-Level)
+================================================================================
+
+Subquery inside another subquery.
+
+Example:
+  SELECT emp_name
+  FROM Employees
+  WHERE department =
+  (
+      SELECT department
+      FROM Departments
+      WHERE dept_id =
+      (
+          SELECT MAX(dept_id)
+          FROM Departments
+      )
+  );
+
+Multi-Level Diagram:
+  Innermost Query
+        ↓
+  Middle Query
+        ↓
+  Outer Query
+        ↓
+  Final Result
+
+================================================================================
+EXISTS WITH NESTED SUBQUERY
+================================================================================
+
+EXISTS checks whether subquery returns rows.
+
+Example:
+  SELECT emp_name
+  FROM Employees e
+  WHERE EXISTS
+  (
+      SELECT *
+      FROM Departments d
+      WHERE e.department = d.department
+  );
+
+EXISTS Execution:
+  Subquery Returns Rows?
+         ↓
+  YES → TRUE
+  NO  → FALSE
+
+NOT EXISTS Example:
+  SELECT emp_name
+  FROM Employees e
+  WHERE NOT EXISTS
+  (
+      SELECT *
+      FROM Departments d
+      WHERE e.department = d.department
+  );
+
+================================================================================
+NESTED SUBQUERY EXECUTION ORDER
+================================================================================
+
++------+-------------------------------+
+| Step | Operation                     |
++------+-------------------------------+
+| 1    | Inner query executes          |
+| 2    | Result returned               |
+| 3    | Outer query uses result       |
+| 4    | Final rows returned           |
++------+-------------------------------+
+
+================================================================================
+DIFFERENCE BETWEEN NESTED AND CORRELATED SUBQUERY
+================================================================================
+
++----------------------------+--------------------------------+
+| Nested Subquery            | Correlated Subquery            |
++----------------------------+--------------------------------+
+| Independent                | Dependent                      |
+| Executes once              | Executes repeatedly            |
+| Faster                     | Slower                         |
+| No outer reference         | Uses outer query values        |
++----------------------------+--------------------------------+
+
+Nested Example (runs once):
+  SELECT emp_name FROM Employees
+  WHERE salary > (SELECT AVG(salary) FROM Employees);
+
+Correlated Example (runs per row):
+  SELECT emp_name FROM Employees e1
+  WHERE salary > (SELECT AVG(salary) FROM Employees e2
+                  WHERE e1.department = e2.department);
+
+================================================================================
+ADVANTAGES AND DISADVANTAGES
+================================================================================
+
+Advantages:
+  1. Easy to understand
+  2. Good for filtering
+  3. Useful for aggregate comparisons
+  4. Cleaner than complex joins sometimes
+
+Disadvantages:
+  1. Can become slow for deep nesting
+  2. Hard to debug large queries
+  3. Complex nesting reduces readability
+
+================================================================================
+REAL-TIME USES
+================================================================================
+
+Nested subqueries are used for:
+  1. Highest salary
+  2. Lowest salary
+  3. Average comparisons
+  4. Department filtering
+  5. Multi-level filtering
+
+================================================================================
+QUICK REVISION
+================================================================================
+
+Nested Subquery:
+  Query inside another query
+  Inner query runs first
+  Outer query uses result
+
+Memory Trick:
+  Inner query runs first
+  Outer query uses result
+
+================================================================================
+INTERVIEW POINTS
+================================================================================
+
+1. Nested subquery is independent.
+2. Inner query executes first.
+3. Outer query uses inner query result.
+4. Can return single or multiple rows.
+5. IN, EXISTS, ANY, ALL commonly used.
+6. Nested subqueries are faster than correlated subqueries.
+7. Deep nesting can reduce readability.
+
+Save this content as `nested_subqueries_guide.txt`. It's plain text, well‑structured, and follows the same format as your previous SQL guides.
